@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Location extends Model
 {
-    protected $fillable = ['name', 'address', 'operating_days'];
+    protected $fillable = ['name', 'address', 'operating_days', 'description'];
 
     public function events(): HasMany
     {

@@ -13,28 +13,6 @@ use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-/**
- * @property int $id
- * @property string $name
- * @property string|null $email
- * @property Carbon|null $email_verified_at
- * @property string|null $password
- * @property string|null $phone
- * @property string|null $gender
- * @property string|null $birth_date
- * @property string|null $photo_url
- * @property string|null $kakao_id
- * @property string|null $bio
- * @property string|null $job
- * @property string|null $instagram_handle
- * @property string|null $hobbies_interests
- * @property string|null $two_factor_secret
- * @property string|null $two_factor_recovery_codes
- * @property Carbon|null $two_factor_confirmed_at
- * @property string|null $remember_token
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- */
 class User extends Authenticatable implements PasskeyUser
 {
     /** @use HasFactory<UserFactory> */
@@ -48,7 +26,10 @@ class User extends Authenticatable implements PasskeyUser
         'gender',
         'birth_date',
         'photo_url',
+        'photos',
         'kakao_id',
+        'member_code',
+        'is_admin',
         'bio',
         'job',
         'instagram_handle',
@@ -67,6 +48,8 @@ class User extends Authenticatable implements PasskeyUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'photos' => 'array',
+            'is_admin' => 'boolean',
         ];
     }
 

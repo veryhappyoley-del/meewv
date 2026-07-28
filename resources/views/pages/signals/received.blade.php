@@ -58,42 +58,44 @@ new #[Layout('layouts::auth')] class extends Component
     }
 }; ?>
 
-<div class="max-w-lg mx-auto mt-10 space-y-4 px-4">
-    <h2 class="text-xl font-bold mb-4">받은 시그널</h2>
+<div>
+    <a href="/mypage" class="back-link">← 마이페이지로</a>
+    <div class="mv-page-head">
+        <h1>받은 시그널</h1>
+        <p>수락하면 공개할 내 정보를 직접 선택할 수 있어요.</p>
+    </div>
 
     @forelse ($this->pendingSignals as $signal)
-        <div wire:key="signal-{{ $signal->id }}" class="border rounded p-4 space-y-3">
-            <div>
-                <div class="font-semibold">{{ $signal->sender->name }}님이 시그널을 보냈어요</div>
-                <div class="text-sm text-gray-500">{{ $signal->sender->job }} · {{ $signal->event->location?->name }}</div>
-            </div>
+        <div wire:key="signal-{{ $signal->id }}" class="mv-card-block">
+            <div class="head">{{ $signal->sender->name }}님이 시그널을 보냈어요</div>
+            <div class="sub">{{ $signal->sender->job }} · {{ $signal->event->location?->name }}</div>
 
             @if ($respondingTo === $signal->id)
-                <div class="space-y-2 border-t pt-3">
-                    <p class="text-sm font-medium">공개할 내 정보를 선택하세요</p>
-                    <label class="flex items-center gap-2 text-sm">
+                <div class="mv-divider">
+                    <p style="font-size:13.5px;font-weight:600;color:var(--text-mid);margin:0 0 10px;">공개할 내 정보를 선택하세요</p>
+                    <label class="check-row">
                         <input type="checkbox" wire:model="disclose" value="phone"> 전화번호
                     </label>
-                    <label class="flex items-center gap-2 text-sm">
+                    <label class="check-row">
                         <input type="checkbox" wire:model="disclose" value="instagram_handle"> 인스타그램
                     </label>
-                    <label class="flex items-center gap-2 text-sm">
+                    <label class="check-row">
                         <input type="checkbox" wire:model="disclose" value="job"> 직업
                     </label>
 
-                    <div class="flex gap-2 mt-2">
-                        <button wire:click="confirmAccept({{ $signal->id }})" class="bg-black text-white px-4 py-2 rounded">공개하고 수락</button>
-                        <button wire:click="cancelAccept" class="border px-4 py-2 rounded">취소</button>
+                    <div style="display:flex;gap:8px;margin-top:14px;">
+                        <button wire:click="confirmAccept({{ $signal->id }})" class="btn btn-primary">공개하고 수락</button>
+                        <button wire:click="cancelAccept" class="btn btn-outline">취소</button>
                     </div>
                 </div>
             @else
-                <div class="flex gap-2">
-                    <button wire:click="startAccept({{ $signal->id }})" class="bg-black text-white px-4 py-2 rounded">수락</button>
-                    <button wire:click="reject({{ $signal->id }})" class="border px-4 py-2 rounded">거절</button>
+                <div style="display:flex;gap:8px;">
+                    <button wire:click="startAccept({{ $signal->id }})" class="btn btn-primary">수락</button>
+                    <button wire:click="reject({{ $signal->id }})" class="btn btn-outline">거절</button>
                 </div>
             @endif
         </div>
     @empty
-        <p class="text-gray-500">받은 시그널이 없어요.</p>
+        <div class="empty">받은 시그널이 없어요.</div>
     @endforelse
 </div>

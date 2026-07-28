@@ -5,7 +5,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-new #[Layout('layouts::app')] class extends Component
+new #[Layout('layouts::app', ['title' => '현장 체크인'])] class extends Component
 {
     #[Computed]
     public function approvedAttendees()
@@ -34,18 +34,23 @@ new #[Layout('layouts::app')] class extends Component
     }
 }; ?>
 
-<div class="max-w-2xl mx-auto mt-10 space-y-4 px-4">
-    <h2 class="text-xl font-bold mb-4">현장 체크인</h2>
+<div>
+    <div class="mv-page-head">
+        <h2>현장 체크인</h2>
+        <p>도착한 참가자를 체크인하면 배지번호가 자동으로 발급돼요.</p>
+    </div>
 
     @forelse ($this->approvedAttendees as $attendee)
-        <div wire:key="checkin-{{ $attendee->id }}" class="border rounded p-4 flex justify-between items-center">
-            <div>
-                <div class="font-semibold">{{ $attendee->user->name }}</div>
-                <div class="text-sm text-gray-500">{{ $attendee->event->location?->name }} · {{ $attendee->event->event_date }}</div>
+        <div wire:key="checkin-{{ $attendee->id }}" class="item-card">
+            <div class="item-main">
+                <div class="item-name">{{ $attendee->user->name }}</div>
+                <div class="item-meta">{{ $attendee->event->location?->name }} · {{ $attendee->event->event_date }}</div>
             </div>
-            <button wire:click="checkIn({{ $attendee->id }})" class="bg-black text-white px-4 py-2 rounded">체크인</button>
+            <div class="item-actions">
+                <button wire:click="checkIn({{ $attendee->id }})" class="btn btn-primary">체크인</button>
+            </div>
         </div>
     @empty
-        <p class="text-gray-500">체크인 대기 중인 승인자가 없어요.</p>
+        <div class="empty">체크인 대기 중인 승인자가 없어요.</div>
     @endforelse
 </div>
