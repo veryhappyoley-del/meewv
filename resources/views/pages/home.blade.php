@@ -49,39 +49,140 @@ new #[Layout('layouts::marketing')] class extends Component
         }
 
         /* 시그널 시스템 폰 목업 */
-        .phone-mockup-wrap{padding:70px 24px;text-align:center;}
-        .phone-frame{
-            width:280px;margin:36px auto 0;background:#151015;border-radius:38px;padding:16px 12px;
-            box-shadow:0 30px 60px -20px rgba(58,36,24,.4);position:relative;
+        .phone-mockup-wrap {
+            padding: 70px 24px;
+            text-align: center;
         }
-        .phone-notch{
-            width:90px;height:20px;background:#151015;border-radius:0 0 16px 16px;
-            position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:2;
+
+        .phone-frame {
+            width: 280px;
+            margin: 36px auto 0;
+            background: #151015;
+            border-radius: 38px;
+            padding: 16px 12px;
+            box-shadow: 0 30px 60px -20px rgba(58, 36, 24, .4);
+            position: relative;
         }
-        .phone-screen{background:var(--void-1,#0a0712);border-radius:28px;overflow:hidden;padding:26px 14px 20px;min-height:440px;text-align:left;}
-        .phone-screen-title{color:#f6f2fb;font-family:var(--font-display);font-weight:800;font-size:14.5px;margin-bottom:2px;}
-        .phone-screen-sub{color:#8d81a6;font-size:11px;margin-bottom:16px;}
-        .phone-attendee{display:flex;align-items:center;gap:10px;background:rgba(246,242,251,.04);border:1px solid rgba(246,242,251,.09);
-            border-radius:14px;padding:10px 12px;margin-bottom:9px;}
-        .phone-avatar{width:34px;height:34px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--peach-orange,#FF7A3D),var(--salmon,#FF9770));
-            display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px;}
-        .phone-attendee-info{flex:1;min-width:0;}
-        .phone-attendee-name{color:#f6f2fb;font-size:12.5px;font-weight:700;}
-        .phone-attendee-job{color:#8d81a6;font-size:10.5px;}
-        .phone-signal-btn{font-size:10.5px;font-weight:700;padding:6px 10px;border-radius:999px;
-            background:linear-gradient(95deg,var(--peach-orange,#FF7A3D),var(--salmon,#FF9770));color:#fff;flex-shrink:0;white-space:nowrap;}
-        .phone-signal-sent{font-size:10.5px;font-weight:700;padding:6px 10px;border-radius:999px;
-            background:rgba(246,242,251,.06);color:#8d81a6;flex-shrink:0;white-space:nowrap;}
-       .phone-att-card{background:rgba(246,242,251,.03);border:1px solid rgba(246,242,251,.09);border-radius:14px;padding:12px;margin-bottom:10px;}
+
+        .phone-notch {
+            width: 90px;
+            height: 20px;
+            background: #151015;
+            border-radius: 0 0 16px 16px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .phone-screen {
+            background: var(--void-1, #0a0712);
+            border-radius: 28px;
+            overflow: hidden;
+            padding: 26px 14px 20px;
+            min-height: 440px;
+            text-align: left;
+        }
+
+        .phone-screen-title {
+            color: #f6f2fb;
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 14.5px;
+            margin-bottom: 2px;
+        }
+
+        .phone-screen-sub {
+            color: #8d81a6;
+            font-size: 11px;
+            margin-bottom: 16px;
+        }
+
+        .phone-attendee {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(246, 242, 251, .04);
+            border: 1px solid rgba(246, 242, 251, .09);
+            border-radius: 14px;
+            padding: 10px 12px;
+            margin-bottom: 9px;
+        }
+
+        .phone-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--peach-orange, #FF7A3D), var(--salmon, #FF9770));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 12px;
+        }
+
+        .phone-attendee-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .phone-attendee-name {
+            color: #f6f2fb;
+            font-size: 12.5px;
+            font-weight: 700;
+        }
+
+        .phone-attendee-job {
+            color: #8d81a6;
+            font-size: 10.5px;
+        }
+
+        .phone-signal-btn {
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: linear-gradient(95deg, var(--peach-orange, #FF7A3D), var(--salmon, #FF9770));
+            color: #fff;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .phone-signal-sent {
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(246, 242, 251, .06);
+            color: #8d81a6;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .phone-screen{background:var(--peach-bg);border-radius:28px;overflow:hidden;padding:26px 14px 20px;min-height:440px;text-align:left;border:1px solid var(--peach-line);}
+        .phone-screen-title{color:var(--peach-text);font-family:var(--font-display);font-weight:800;font-size:14.5px;margin-bottom:2px;}
+        .phone-screen-sub{color:var(--peach-text-mid);font-size:11px;margin-bottom:16px;}
+        .phone-att-card{background:var(--peach-card);border:1px solid var(--peach-line);border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:0 6px 16px -10px rgba(58,36,24,.2);}
         .phone-att-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-        .phone-att-name{color:#f6f2fb;font-size:13px;font-weight:800;flex:1;}
+        .phone-avatar{width:34px;height:34px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--peach-orange),var(--salmon));
+            display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px;}
+        .phone-att-name{color:var(--peach-text);font-size:13px;font-weight:800;flex:1;}
+        .phone-signal-btn{font-size:10.5px;font-weight:700;padding:6px 10px;border-radius:999px;
+            background:linear-gradient(95deg,var(--peach-orange),var(--salmon));color:#fff;flex-shrink:0;white-space:nowrap;}
+        .phone-signal-sent{font-size:10.5px;font-weight:700;padding:6px 10px;border-radius:999px;
+            background:rgba(58,36,24,.05);color:var(--peach-text-mid);flex-shrink:0;white-space:nowrap;}
         .phone-att-tags{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;}
-        .phone-tag{font-size:9px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(246,242,251,.06);color:#8d81a6;}
-        .phone-tag.badge{background:rgba(255,138,61,.16);color:var(--peach-orange,#FF7A3D);}
+        .phone-tag{font-size:9px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(58,36,24,.05);color:var(--peach-text-mid);white-space:nowrap;}
+        .phone-tag.badge{background:rgba(255,122,61,.16);color:var(--peach-orange);}
         .phone-att-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-        .phone-tile{background:rgba(246,242,251,.03);border:1px solid rgba(246,242,251,.08);border-radius:8px;
-            padding:6px 8px;font-size:9.5px;color:#f6f2fb;font-weight:600;display:flex;align-items:center;gap:4px;
-            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .phone-tile{background:rgba(58,36,24,.02);border:1px solid var(--peach-line);border-radius:8px;padding:6px 8px;overflow:hidden;}
+        .pt-top{display:flex;align-items:center;gap:3px;font-size:8.5px;color:var(--peach-text-mid);font-weight:600;margin-bottom:2px;white-space:nowrap;}
+        .pt-top span{flex-shrink:0;}
+        .pt-val{font-size:9.5px;color:var(--peach-text);font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
         /* 타임라인 */
         .peach-timeline {
             display: flex;
@@ -790,6 +891,7 @@ new #[Layout('layouts::marketing')] class extends Component
 
         {{-- 히어로 --}}
         <section class="peach-hero">
+         <img src="/images/logo-full.png" alt="MEEWV" style="width:260px;height:auto;margin:0 auto 28px;display:block;">
             <div class="peach-eyebrow">MEET · WEAVE · MEEWV</div>
             <h1>반갑습니다!<br>이제 새로운 인연을<br>만날 시간입니다.</h1>
             <p>성비를 맞춘 테이블, 프로 MC가 이끄는 아이스브레이킹. 파티부터 러닝, 요가까지 — 새로운 만남과 인연을 엮어갑니다.</p>
@@ -930,13 +1032,14 @@ new #[Layout('layouts::marketing')] class extends Component
                         <div class="phone-att-tags">
                             <span class="phone-tag">여성</span>
                             <span class="phone-tag">28세</span>
+                            <span class="phone-tag">162cm</span>
                             <span class="phone-tag badge">03번</span>
                         </div>
                         <div class="phone-att-grid">
-                            <div class="phone-tile"><span>💼</span>마케터</div>
-                            <div class="phone-tile"><span>🎯</span>여행,요가</div>
-                            <div class="phone-tile"><span>📸</span>@seoyeon</div>
-                            <div class="phone-tile"><span>💬</span>여행 좋아해요</div>
+                            <div class="phone-tile"><div class="pt-top"><span>💼</span>직업</div><div class="pt-val">마케터</div></div>
+                            <div class="phone-tile"><div class="pt-top"><span>🎯</span>관심사</div><div class="pt-val">여행,요가</div></div>
+                            <div class="phone-tile"><div class="pt-top"><span>💕</span>연애스타일</div><div class="pt-val">다정한 편</div></div>
+                            <div class="phone-tile"><div class="pt-top"><span>✨</span>이상형</div><div class="pt-val">대화잘통함</div></div>
                         </div>
                     </div>
 
@@ -949,13 +1052,14 @@ new #[Layout('layouts::marketing')] class extends Component
                         <div class="phone-att-tags">
                             <span class="phone-tag">여성</span>
                             <span class="phone-tag">26세</span>
+                            <span class="phone-tag">158cm</span>
                             <span class="phone-tag badge">07번</span>
                         </div>
                         <div class="phone-att-grid">
-                            <div class="phone-tile"><span>💼</span>디자이너</div>
-                            <div class="phone-tile"><span>🎯</span>러닝,독서</div>
-                            <div class="phone-tile"><span>📸</span>@haeun</div>
-                            <div class="phone-tile"><span>💬</span>운동 좋아해요</div>
+                            <div class="phone-tile"><div class="pt-top"><span>💼</span>직업</div><div class="pt-val">디자이너</div></div>
+                            <div class="phone-tile"><div class="pt-top"><span>🎯</span>관심사</div><div class="pt-val">러닝,독서</div></div>
+                            <div class="phone-tile"><div class="pt-top"><span>💕</span>연애스타일</div><div class="pt-val">적극적</div></div>
+                            <div class="phone-tile"><div class="pt-top"><span>✨</span>이상형</div><div class="pt-val">유머있는분</div></div>
                         </div>
                     </div>
                 </div>

@@ -30,6 +30,9 @@ new #[Layout('layouts::auth')] class extends Component
     public string $job = '';
     public string $instagram_handle = '';
     public string $hobbies_interests = '';
+    public ?int $height = null;
+    public string $dating_style = '';
+    public string $ideal_type = '';
     public bool $privacyConsent = false;
     public string $memberCode = '';
 
@@ -113,6 +116,9 @@ new #[Layout('layouts::auth')] class extends Component
             'job' => 'nullable|string|max:100',
             'instagram_handle' => 'nullable|string|max:50',
             'hobbies_interests' => 'nullable|string|max:500',
+            'height' => 'nullable|integer|min:100|max:250',
+            'dating_style' => 'nullable|string|max:100',
+            'ideal_type' => 'nullable|string|max:100',
             'privacyConsent' => 'accepted',
         ], [
             'phone.regex' => '올바른 휴대폰 번호를 입력해주세요. (- 없이 숫자만)',
@@ -149,6 +155,9 @@ new #[Layout('layouts::auth')] class extends Component
             'job' => $this->job,
             'instagram_handle' => $this->instagram_handle,
             'hobbies_interests' => $this->hobbies_interests,
+            'height' => $this->height,
+            'dating_style' => $this->dating_style,
+            'ideal_type' => $this->ideal_type,
         ];
 
         if ($photoPaths) {
@@ -1192,7 +1201,23 @@ new #[Layout('layouts::auth')] class extends Component
                     <label>취미 및 요즘 관심사</label>
                     <textarea wire:model="hobbies_interests" rows="3"></textarea>
                 </div>
+                <div class="section-label">연애 스타일</div>
 
+                <div class="form-row-2">
+                    <div class="field">
+                        <label>키 (cm)</label>
+                        <input type="number" wire:model="height" placeholder="170">
+                    </div>
+                    <div class="field">
+                        <label>연애 스타일</label>
+                        <input type="text" wire:model="dating_style" placeholder="예: 다정한 스타일">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>이상형</label>
+                    <input type="text" wire:model="ideal_type" placeholder="예: 대화가 잘 통하는 사람">
+                </div>
                 <div class="privacy-consent-box">
                     <label class="check-row" style="align-items:flex-start;">
                         <input type="checkbox" wire:model="privacyConsent" style="margin-top:3px;">

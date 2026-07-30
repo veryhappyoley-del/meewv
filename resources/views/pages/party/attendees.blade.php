@@ -71,16 +71,18 @@ new #[Layout('layouts::auth')] class extends Component
         .att-avatar{width:46px;height:46px;border-radius:50%;object-fit:cover;border:1px solid var(--line);flex-shrink:0;}
         .att-avatar-fallback{width:46px;height:46px;border-radius:50%;flex-shrink:0;
             background:linear-gradient(135deg,var(--spark-orange),var(--spark-pink));
-            display:flex;align-items:center;justify-content:center;color:var(--void-1);font-weight:800;font-size:16px;}
+            display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px;}
         .att-name{font-family:var(--font-display);font-weight:800;font-size:19px;flex:1;min-width:0;}
         .att-tags{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;}
         .att-tag{font-size:11.5px;font-weight:700;padding:4px 12px;border-radius:999px;
-            background:rgba(246,242,251,.06);color:var(--text-mid);border:1px solid var(--line);}
-        .att-tag.badge{background:rgba(255,138,61,.14);color:var(--spark-orange);border-color:rgba(255,138,61,.3);}
+            background:rgba(58,36,24,.05);color:var(--text-mid);border:1px solid var(--line);}
+        .att-tag.badge{background:rgba(255,122,61,.14);color:var(--spark-orange);border-color:rgba(255,122,61,.3);}
         .att-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-        .att-tile{background:rgba(246,242,251,.03);border:1px solid var(--line);border-radius:14px;padding:14px 10px;text-align:center;}
-        .att-tile-icon{font-size:18px;margin-bottom:5px;}
-        .att-tile-label{font-size:10px;color:var(--text-lo);margin-bottom:3px;font-weight:600;}
+        .att-tile{background:rgba(58,36,24,.02);border:1px solid var(--line);border-radius:14px;
+            padding:10px 12px;overflow:hidden;min-width:0;}
+        .att-tile-top{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-lo);
+            font-weight:600;margin-bottom:4px;white-space:nowrap;}
+        .att-tile-top span{flex-shrink:0;}
         .att-tile-value{font-size:12.5px;font-weight:700;color:var(--text-hi);
             overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
         .att-signal-btn{flex-shrink:0;}
@@ -127,28 +129,35 @@ new #[Layout('layouts::auth')] class extends Component
                     @if ($age)
                         <span class="att-tag">{{ $age }}세</span>
                     @endif
+                    @if ($attendee->user->height)
+                        <span class="att-tag">{{ $attendee->user->height }}cm</span>
+                    @endif
                     <span class="att-tag badge">{{ $attendee->badge_no ?? '--' }}번</span>
                 </div>
 
                 <div class="att-grid">
                     <div class="att-tile">
-                        <div class="att-tile-icon">💼</div>
-                        <div class="att-tile-label">직업</div>
+                        <div class="att-tile-top"><span>💼</span>직업</div>
                         <div class="att-tile-value">{{ $attendee->user->job ?: '비공개' }}</div>
                     </div>
                     <div class="att-tile">
-                        <div class="att-tile-icon">🎯</div>
-                        <div class="att-tile-label">관심사</div>
+                        <div class="att-tile-top"><span>🎯</span>관심사</div>
                         <div class="att-tile-value">{{ $attendee->user->hobbies_interests ?: '비공개' }}</div>
                     </div>
                     <div class="att-tile">
-                        <div class="att-tile-icon">📸</div>
-                        <div class="att-tile-label">인스타그램</div>
+                        <div class="att-tile-top"><span>💕</span>연애 스타일</div>
+                        <div class="att-tile-value">{{ $attendee->user->dating_style ?: '비공개' }}</div>
+                    </div>
+                    <div class="att-tile">
+                        <div class="att-tile-top"><span>✨</span>이상형</div>
+                        <div class="att-tile-value">{{ $attendee->user->ideal_type ?: '비공개' }}</div>
+                    </div>
+                    <div class="att-tile">
+                        <div class="att-tile-top"><span>📸</span>인스타그램</div>
                         <div class="att-tile-value">{{ $attendee->user->instagram_handle ?: '비공개' }}</div>
                     </div>
                     <div class="att-tile">
-                        <div class="att-tile-icon">💬</div>
-                        <div class="att-tile-label">한줄소개</div>
+                        <div class="att-tile-top"><span>💬</span>한줄소개</div>
                         <div class="att-tile-value">{{ $attendee->user->bio ?: '비공개' }}</div>
                     </div>
                 </div>

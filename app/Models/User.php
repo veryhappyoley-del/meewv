@@ -34,6 +34,9 @@ class User extends Authenticatable implements PasskeyUser
         'job',
         'instagram_handle',
         'hobbies_interests',
+        'height',
+        'dating_style',
+        'ideal_type',
     ];
 
     protected $hidden = [
