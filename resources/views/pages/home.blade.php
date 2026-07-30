@@ -402,7 +402,7 @@ new #[Layout('layouts::marketing')] class extends Component
 
         /* 히어로 */
         .peach-hero {
-            padding: 90px 24px 70px;
+            padding: 40px 24px 70px;
             text-align: center;
             max-width: 900px;
             margin: 0 auto;
