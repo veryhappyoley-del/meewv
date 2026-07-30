@@ -81,7 +81,7 @@ html{scrollbar-width:thin;scrollbar-color:rgba(58,36,24,.15) transparent;}
 <header class="nav">
     <div class="nav-inner">
         <a href="/" class="logo">
-            <img class="logo-mark" src="/images/logo.png" alt="MEEWV">MEEWV
+            <img class="logo-mark" src="/images/logo_simbol.png" alt="MEEWV">MEEWV
         </a>
         <nav class="nav-links">
             <a href="#about">소개</a>

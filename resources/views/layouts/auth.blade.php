@@ -209,7 +209,7 @@ html{scrollbar-width:thin;scrollbar-color:rgba(58,36,24,.15) transparent;}
 <header class="mv-nav">
     <div class="mv-nav-inner">
         <a href="/" class="mv-logo">
-            <img class="mv-logo-mark" src="/images/logo.png" alt="MEEWV">MEEWV
+            <img class="mv-logo-mark" src="/images/logo_simbol.png" alt="MEEWV">MEEWV
         </a>
         @auth
             <div class="mv-user">{{ auth()->user()->name }}</div>

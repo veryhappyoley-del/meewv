@@ -162,115 +162,181 @@ new #[Layout('layouts::marketing')] class extends Component
             white-space: nowrap;
         }
 
-        .phone-screen{background:var(--peach-bg);border-radius:28px;overflow:hidden;padding:26px 14px 20px;min-height:440px;text-align:left;border:1px solid var(--peach-line);}
-        .phone-screen-title{color:var(--peach-text);font-family:var(--font-display);font-weight:800;font-size:14.5px;margin-bottom:2px;}
-        .phone-screen-sub{color:var(--peach-text-mid);font-size:11px;margin-bottom:16px;}
-        .phone-att-card{background:var(--peach-card);border:1px solid var(--peach-line);border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:0 6px 16px -10px rgba(58,36,24,.2);}
-        .phone-att-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-        .phone-avatar{width:34px;height:34px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--peach-orange),var(--salmon));
-            display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px;}
-        .phone-att-name{color:var(--peach-text);font-size:13px;font-weight:800;flex:1;}
-        .phone-signal-btn{font-size:10.5px;font-weight:700;padding:6px 10px;border-radius:999px;
-            background:linear-gradient(95deg,var(--peach-orange),var(--salmon));color:#fff;flex-shrink:0;white-space:nowrap;}
-        .phone-signal-sent{font-size:10.5px;font-weight:700;padding:6px 10px;border-radius:999px;
-            background:rgba(58,36,24,.05);color:var(--peach-text-mid);flex-shrink:0;white-space:nowrap;}
-        .phone-att-tags{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;}
-        .phone-tag{font-size:9px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(58,36,24,.05);color:var(--peach-text-mid);white-space:nowrap;}
-        .phone-tag.badge{background:rgba(255,122,61,.16);color:var(--peach-orange);}
-        .phone-att-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-        .phone-tile{background:rgba(58,36,24,.02);border:1px solid var(--peach-line);border-radius:8px;padding:6px 8px;overflow:hidden;}
-        .pt-top{display:flex;align-items:center;gap:3px;font-size:8.5px;color:var(--peach-text-mid);font-weight:600;margin-bottom:2px;white-space:nowrap;}
-        .pt-top span{flex-shrink:0;}
-        .pt-val{font-size:9.5px;color:var(--peach-text);font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-
-        /* 타임라인 */
-        .peach-timeline {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-            max-width: 1080px;
-            margin: 0 auto 70px;
-            padding: 0 10px;
+        .phone-screen {
+            background: var(--peach-bg);
+            border-radius: 28px;
+            overflow: hidden;
+            padding: 26px 14px 20px;
+            min-height: 440px;
+            text-align: left;
+            border: 1px solid var(--peach-line);
         }
 
-        .peach-tl-line {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--peach-line);
-            transform: translateY(-50%);
-            z-index: 0;
+        .phone-screen-title {
+            color: var(--peach-text);
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 14.5px;
+            margin-bottom: 2px;
         }
 
-        .peach-tl-item {
-            position: relative;
-            z-index: 1;
+        .phone-screen-sub {
+            color: var(--peach-text-mid);
+            font-size: 11px;
+            margin-bottom: 16px;
+        }
+
+        .phone-att-card {
+            background: var(--peach-card);
+            border: 1px solid var(--peach-line);
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 6px 16px -10px rgba(58, 36, 24, .2);
+        }
+
+        .phone-att-head {
             display: flex;
-            flex-direction: column;
             align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .phone-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--peach-orange), var(--salmon));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 12px;
+        }
+
+        .phone-att-name {
+            color: var(--peach-text);
+            font-size: 13px;
+            font-weight: 800;
             flex: 1;
         }
 
-        .peach-tl-dot {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--peach-orange);
-            border: 3px solid var(--peach-bg);
-            box-shadow: 0 0 0 2px var(--peach-line);
-        }
-
-        .peach-tl-label {
-            text-align: center;
-            padding: 14px 6px;
-        }
-
-        .peach-tl-time {
-            font-family: var(--font-display);
-            font-weight: 800;
-            font-size: 16px;
-            color: var(--peach-orange-deep);
-        }
-
-        .peach-tl-title {
+        .phone-signal-btn {
+            font-size: 10.5px;
             font-weight: 700;
-            font-size: 14px;
-            color: var(--peach-text);
-            margin-top: 2px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: linear-gradient(95deg, var(--peach-orange), var(--salmon));
+            color: #fff;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
 
-        .peach-tl-desc {
-            font-size: 11.5px;
+        .phone-signal-sent {
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(58, 36, 24, .05);
             color: var(--peach-text-mid);
-            margin-top: 4px;
-            line-height: 1.5;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
 
-        @media (max-width:820px) {
-            .peach-timeline {
-                flex-direction: column;
-                gap: 0;
-            }
+        .phone-att-tags {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
 
-            .peach-tl-line {
-                display: none;
-            }
+        .phone-tag {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: rgba(58, 36, 24, .05);
+            color: var(--peach-text-mid);
+            white-space: nowrap;
+        }
 
-            .peach-tl-item {
-                flex-direction: row;
-                align-items: flex-start;
-                gap: 14px;
-                width: 100%;
-                margin-bottom: 18px;
-            }
+        .phone-tag.badge {
+            background: rgba(255, 122, 61, .16);
+            color: var(--peach-orange);
+        }
 
-            .peach-tl-label {
-                text-align: left;
-                padding: 0;
-            }
+        .phone-att-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .phone-tile {
+            background: rgba(58, 36, 24, .02);
+            border: 1px solid var(--peach-line);
+            border-radius: 8px;
+            padding: 6px 8px;
+            overflow: hidden;
+        }
+
+        .pt-top {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 8.5px;
+            color: var(--peach-text-mid);
+            font-weight: 600;
+            margin-bottom: 2px;
+            white-space: nowrap;
+        }
+
+        .pt-top span {
+            flex-shrink: 0;
+        }
+
+        .pt-val {
+            font-size: 9.5px;
+            color: var(--peach-text);
+            font-weight: 700;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* 타임라인 (지그재그형 + 심플 아이콘) */
+        .peach-zigzag{max-width:1100px;margin:0 auto 20px;position:relative;height:250px;}
+        .peach-zigzag-svg{position:absolute;inset:0;width:100%;height:100%;z-index:0;}
+        .peach-zigzag-row{position:relative;z-index:1;display:flex;height:100%;}
+        .peach-zz-item{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;position:relative;}
+        .peach-zz-item.up{justify-content:flex-start;}
+        .peach-zz-item.down{justify-content:flex-end;}
+        .peach-zz-node{width:52px;height:52px;border-radius:50%;background:var(--peach-card);
+            border:2px solid var(--peach-orange);display:flex;align-items:center;justify-content:center;
+            position:relative;box-shadow:0 8px 20px -10px rgba(58,36,24,.25);flex-shrink:0;}
+        .peach-zz-node svg{width:22px;height:22px;stroke:var(--peach-orange-deep);fill:none;
+            stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+        .peach-zz-num{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;
+            background:linear-gradient(95deg,var(--peach-orange),var(--salmon));color:#fff;font-size:10px;
+            font-weight:800;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);}
+        .peach-zz-content{text-align:center;padding:0 8px;}
+        .peach-zz-item.up .peach-zz-content{margin-top:12px;}
+        .peach-zz-item.down .peach-zz-content{margin-bottom:12px;order:-1;}
+        .peach-zz-time{font-size:10.5px;font-weight:700;color:var(--peach-text-mid);
+            letter-spacing:.06em;margin-bottom:4px;}
+        .peach-zz-title{font-family:var(--font-display);font-weight:800;font-size:14.5px;
+            color:var(--peach-text);margin-bottom:3px;}
+        .peach-zz-desc{font-size:11px;color:var(--peach-text-mid);line-height:1.5;max-width:130px;margin:0 auto;}
+
+        @media (max-width:820px){
+            .peach-zigzag{height:auto;}
+            .peach-zigzag-svg{display:none;}
+            .peach-zigzag-row{flex-direction:column;height:auto;}
+            .peach-zz-item{flex-direction:row!important;justify-content:flex-start!important;
+                text-align:left;margin-bottom:20px;gap:14px;}
+            .peach-zz-content{text-align:left;margin:0!important;order:0!important;}
+            .peach-zz-desc{max-width:none;margin:0;}
         }
 
         /* 사진 콜라주 */
@@ -891,7 +957,7 @@ new #[Layout('layouts::marketing')] class extends Component
 
         {{-- 히어로 --}}
         <section class="peach-hero">
-         <img src="/images/logo-full.png" alt="MEEWV" style="width:260px;height:auto;margin:0 auto 28px;display:block;">
+            <img src="/images/logo-full.png" alt="MEEWV" style="width:260px;height:auto;margin:0 auto 28px;display:block;">
             <div class="peach-eyebrow">MEET · WEAVE · MEEWV</div>
             <h1>반갑습니다!<br>이제 새로운 인연을<br>만날 시간입니다.</h1>
             <p>성비를 맞춘 테이블, 프로 MC가 이끄는 아이스브레이킹. 파티부터 러닝, 요가까지 — 새로운 만남과 인연을 엮어갑니다.</p>
@@ -936,52 +1002,72 @@ new #[Layout('layouts::marketing')] class extends Component
             <h2 class="peach-h2">평균 진행되는 콘텐츠, 5가지</h2>
             <p class="peach-sub">시작부터 시그널까지, 한 번의 파티 흐름이에요. (예시 일정이며 회차마다 달라질 수 있어요)</p>
 
-            <div class="peach-timeline">
-                <div class="peach-tl-line"></div>
+           <div class="peach-zigzag">
+                <svg class="peach-zigzag-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <polyline points="10,22 30,78 50,22 70,78 90,22" fill="none"
+                        stroke="var(--peach-line)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+                </svg>
 
-                <div class="peach-tl-item">
-                    <div class="peach-tl-label" style="order:0;">
-                        <div class="peach-tl-time">20:30</div>
-                        <div class="peach-tl-title">파티 시작</div>
-                        <div class="peach-tl-desc">입장과 함께 자리 배정</div>
+                <div class="peach-zigzag-row">
+                    <div class="peach-zz-item up">
+                        <div class="peach-zz-node">
+                            <span class="peach-zz-num">1</span>
+                            <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>
+                        </div>
+                        <div class="peach-zz-content">
+                            <div class="peach-zz-time">20:30</div>
+                            <div class="peach-zz-title">파티 시작</div>
+                            <div class="peach-zz-desc">입장과 함께 자리 배정</div>
+                        </div>
                     </div>
-                    <div class="peach-tl-dot" style="order:1;"></div>
-                </div>
 
-                <div class="peach-tl-item">
-                    <div class="peach-tl-dot" style="order:0;"></div>
-                    <div class="peach-tl-label" style="order:1;">
-                        <div class="peach-tl-time">21:00</div>
-                        <div class="peach-tl-title">아이스브레이킹</div>
-                        <div class="peach-tl-desc">MC와 함께하는 게임 타임</div>
+                    <div class="peach-zz-item down">
+                        <div class="peach-zz-node">
+                            <span class="peach-zz-num">2</span>
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1" fill="currentColor"/><circle cx="16" cy="8" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="16" cy="16" r="1" fill="currentColor"/></svg>
+                        </div>
+                        <div class="peach-zz-content">
+                            <div class="peach-zz-time">21:00</div>
+                            <div class="peach-zz-title">아이스브레이킹</div>
+                            <div class="peach-zz-desc">MC와 함께하는 게임 타임</div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="peach-tl-item">
-                    <div class="peach-tl-label" style="order:0;">
-                        <div class="peach-tl-time">22:00</div>
-                        <div class="peach-tl-title">자유 대화</div>
-                        <div class="peach-tl-desc">테이블별 자유로운 이야기</div>
+                    <div class="peach-zz-item up">
+                        <div class="peach-zz-node">
+                            <span class="peach-zz-num">3</span>
+                            <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+                        </div>
+                        <div class="peach-zz-content">
+                            <div class="peach-zz-time">22:00</div>
+                            <div class="peach-zz-title">자유 대화</div>
+                            <div class="peach-zz-desc">테이블별 자유로운 이야기</div>
+                        </div>
                     </div>
-                    <div class="peach-tl-dot" style="order:1;"></div>
-                </div>
 
-                <div class="peach-tl-item">
-                    <div class="peach-tl-dot" style="order:0;"></div>
-                    <div class="peach-tl-label" style="order:1;">
-                        <div class="peach-tl-time">23:00</div>
-                        <div class="peach-tl-title">시그널 타임</div>
-                        <div class="peach-tl-desc">마음에 드는 사람에게 시그널을</div>
+                    <div class="peach-zz-item down">
+                        <div class="peach-zz-node">
+                            <span class="peach-zz-num">4</span>
+                            <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                        </div>
+                        <div class="peach-zz-content">
+                            <div class="peach-zz-time">23:00</div>
+                            <div class="peach-zz-title">시그널 타임</div>
+                            <div class="peach-zz-desc">마음에 드는 사람에게 시그널을</div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="peach-tl-item">
-                    <div class="peach-tl-label" style="order:0;">
-                        <div class="peach-tl-time">24:00</div>
-                        <div class="peach-tl-title">파티 종료</div>
-                        <div class="peach-tl-desc">매칭 확인은 마이페이지에서</div>
+                    <div class="peach-zz-item up">
+                        <div class="peach-zz-node">
+                            <span class="peach-zz-num">5</span>
+                            <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                        </div>
+                        <div class="peach-zz-content">
+                            <div class="peach-zz-time">24:00</div>
+                            <div class="peach-zz-title">파티 종료</div>
+                            <div class="peach-zz-desc">매칭 확인은 마이페이지에서</div>
+                        </div>
                     </div>
-                    <div class="peach-tl-dot" style="order:1;"></div>
                 </div>
             </div>
 
@@ -1036,10 +1122,22 @@ new #[Layout('layouts::marketing')] class extends Component
                             <span class="phone-tag badge">03번</span>
                         </div>
                         <div class="phone-att-grid">
-                            <div class="phone-tile"><div class="pt-top"><span>💼</span>직업</div><div class="pt-val">마케터</div></div>
-                            <div class="phone-tile"><div class="pt-top"><span>🎯</span>관심사</div><div class="pt-val">여행,요가</div></div>
-                            <div class="phone-tile"><div class="pt-top"><span>💕</span>연애스타일</div><div class="pt-val">다정한 편</div></div>
-                            <div class="phone-tile"><div class="pt-top"><span>✨</span>이상형</div><div class="pt-val">대화잘통함</div></div>
+                            <div class="phone-tile">
+                                <div class="pt-top"><span>💼</span>직업</div>
+                                <div class="pt-val">마케터</div>
+                            </div>
+                            <div class="phone-tile">
+                                <div class="pt-top"><span>🎯</span>관심사</div>
+                                <div class="pt-val">여행,요가</div>
+                            </div>
+                            <div class="phone-tile">
+                                <div class="pt-top"><span>💕</span>연애스타일</div>
+                                <div class="pt-val">다정한 편</div>
+                            </div>
+                            <div class="phone-tile">
+                                <div class="pt-top"><span>✨</span>이상형</div>
+                                <div class="pt-val">대화잘통함</div>
+                            </div>
                         </div>
                     </div>
 
@@ -1056,10 +1154,22 @@ new #[Layout('layouts::marketing')] class extends Component
                             <span class="phone-tag badge">07번</span>
                         </div>
                         <div class="phone-att-grid">
-                            <div class="phone-tile"><div class="pt-top"><span>💼</span>직업</div><div class="pt-val">디자이너</div></div>
-                            <div class="phone-tile"><div class="pt-top"><span>🎯</span>관심사</div><div class="pt-val">러닝,독서</div></div>
-                            <div class="phone-tile"><div class="pt-top"><span>💕</span>연애스타일</div><div class="pt-val">적극적</div></div>
-                            <div class="phone-tile"><div class="pt-top"><span>✨</span>이상형</div><div class="pt-val">유머있는분</div></div>
+                            <div class="phone-tile">
+                                <div class="pt-top"><span>💼</span>직업</div>
+                                <div class="pt-val">디자이너</div>
+                            </div>
+                            <div class="phone-tile">
+                                <div class="pt-top"><span>🎯</span>관심사</div>
+                                <div class="pt-val">러닝,독서</div>
+                            </div>
+                            <div class="phone-tile">
+                                <div class="pt-top"><span>💕</span>연애스타일</div>
+                                <div class="pt-val">적극적</div>
+                            </div>
+                            <div class="phone-tile">
+                                <div class="pt-top"><span>✨</span>이상형</div>
+                                <div class="pt-val">유머있는분</div>
+                            </div>
                         </div>
                     </div>
                 </div>
