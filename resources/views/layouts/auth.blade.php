@@ -85,7 +85,7 @@ html{scrollbar-width:thin;scrollbar-color:rgba(58,36,24,.15) transparent;}
   display:flex;align-items:center;gap:8px;
   font-family:var(--font-display);font-weight:800;font-size:17px;letter-spacing:0.01em;
 }
-.mv-logo-mark{width:48px;height:34px;flex-shrink:0;object-fit:contain;}
+.mv-logo-mark{width:130px;height:auto;object-fit:contain;}
 .mv-logo-tag{font-size:11px;font-weight:600;color:var(--text-lo);border:1px solid var(--line);padding:2px 8px;border-radius:999px;}
 .mv-nav-links{display:flex;align-items:center;gap:22px;font-size:14px;color:var(--text-mid);}
 .mv-nav-links a{padding-bottom:3px;border-bottom:1px solid transparent;transition:color .2s;}
@@ -210,7 +210,6 @@ html{scrollbar-width:thin;scrollbar-color:rgba(58,36,24,.15) transparent;}
     <div class="mv-nav-inner">
         <a href="/" class="mv-logo">
             <img class="mv-logo-mark" src="/images/logo.png" alt="MEEWV">
-            MEEWV
         </a>
         @auth
             <div class="mv-user">{{ auth()->user()->name }}</div>

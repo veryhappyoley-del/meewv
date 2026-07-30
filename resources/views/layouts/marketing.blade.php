@@ -55,7 +55,7 @@ html{scrollbar-width:thin;scrollbar-color:rgba(58,36,24,.15) transparent;}
   -webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);}
 .nav-inner{max-width:1180px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
 .logo{display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-weight:800;font-size:28px;}
-.logo-mark{width:52px;height:38px;flex-shrink:0;object-fit:contain;}
+.logo-mark{width:140px;height:auto;object-fit:contain;}
 .nav-links{display:flex;align-items:center;gap:26px;font-size:14px;color:var(--text-mid);}
 .nav-links a:hover{color:var(--text-hi);}
 .nav-cta-group{display:flex;align-items:center;gap:12px;}
@@ -82,7 +82,6 @@ html{scrollbar-width:thin;scrollbar-color:rgba(58,36,24,.15) transparent;}
     <div class="nav-inner">
         <a href="/" class="logo">
             <img class="logo-mark" src="/images/logo.png" alt="MEEWV">
-            MEEWV
         </a>
         <nav class="nav-links">
             <a href="#about">소개</a>
