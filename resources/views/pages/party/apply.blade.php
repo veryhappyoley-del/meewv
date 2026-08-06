@@ -1400,7 +1400,7 @@ new #[Layout('layouts::auth')] class extends Component
             </div>
             @endif
 
-            @if ($step === 4)@if ($step === 4)
+            @if ($step === 4)
             <div wire:key="step-4">
                 <button type="button" wire:click="backTo(2)" class="back-link">← 정보 다시 입력</button>
                 <div class="apply-eyebrow"><span class="dot"></span>Payment</div>
