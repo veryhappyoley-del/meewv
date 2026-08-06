@@ -185,6 +185,48 @@ new #[Layout('layouts::auth')] class extends Component
         $this->cashReceiptNumber = '';
     }
 
+    #[\Livewire\Attributes\On('portone-payment-done')]
+    public function confirmPortonePayment(string $paymentId, string $method, \App\Services\PortOneService $portOne): void
+    {
+        $expectedAmount = (int) ($this->selectedEventModel?->price ?? 0);
+
+        $data = $portOne->verifyPayment($paymentId);
+
+        if (! $data || ! $portOne->isPaid($data, $expectedAmount)) {
+            $this->addError('paymentMethod', '결제 확인에 실패했어요. 잠시 후 다시 시도해주세요.');
+            return;
+        }
+
+        Payment::create([
+            'event_attendee_id' => $this->attendeeId,
+            'amount' => $expectedAmount,
+            'currency' => 'KRW',
+            'method' => $method,
+            'status' => 'paid',
+            'transaction_id' => $paymentId,
+            'paid_at' => now(),
+        ]);
+
+        $this->finalizeRegistration();
+    }
+
+    private function finalizeRegistration(): void
+    {
+        if ($this->userId) {
+            $user = \App\Models\User::find($this->userId);
+
+            if ($user && ! $user->member_code) {
+                $user->update(['member_code' => $this->generateMemberCode()]);
+            }
+
+            Log::info("[카톡 발송 예정] {$user->name}({$user->phone}) 회원코드 안내: {$user->member_code}");
+
+            Auth::login($user, remember: true);
+            $this->memberCode = $user->member_code;
+        }
+
+        $this->step = 5;
+    }
     private function generateMemberCode(): string
     {
         $chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
@@ -201,20 +243,11 @@ new #[Layout('layouts::auth')] class extends Component
 
     public function submitPayment(): void
     {
-        $rules = [
-            'paymentMethod' => 'required|in:kakaopay,naverpay,tosspay,bank_transfer',
-        ];
-
-        if ($this->paymentMethod === 'bank_transfer') {
-            $rules['depositorName'] = 'required|string|max:50';
-            if ($this->cashReceiptRequested) {
-                $rules['cashReceiptType'] = 'required|in:personal,business';
-                $rules['cashReceiptNumber'] = 'required|string|max:30';
-            }
-        }
-
-        $this->validate($rules, [
-            'paymentMethod.required' => '결제 수단을 선택해주세요.',
+        $this->validate([
+            'depositorName' => 'required|string|max:50',
+            'cashReceiptType' => $this->cashReceiptRequested ? 'required|in:personal,business' : 'nullable',
+            'cashReceiptNumber' => $this->cashReceiptRequested ? 'required|string|max:30' : 'nullable',
+        ], [
             'depositorName.required' => '입금자명을 입력해주세요.',
             'cashReceiptNumber.required' => '현금영수증 발급 번호를 입력해주세요.',
         ]);
@@ -223,7 +256,7 @@ new #[Layout('layouts::auth')] class extends Component
             'event_attendee_id' => $this->attendeeId,
             'amount' => $this->selectedEventModel?->price ?? 0,
             'currency' => 'KRW',
-            'method' => $this->paymentMethod,
+            'method' => 'bank_transfer',
             'status' => 'pending',
             'depositor_name' => $this->depositorName ?: null,
             'cash_receipt_requested' => $this->cashReceiptRequested,
@@ -231,31 +264,69 @@ new #[Layout('layouts::auth')] class extends Component
             'cash_receipt_number' => $this->cashReceiptRequested ? $this->cashReceiptNumber : null,
         ]);
 
-        // 로그인(세션 재발급)은 더 이상 버튼을 누를 일이 없는 이 시점에 마지막으로 처리해요.
-        // 이렇게 하면 세션이 바뀌어도 그 뒤에 눌릴 버튼이 없어서 "페이지 만료" 문제가 안 생겨요.
-        if ($this->userId) {
-            $user = \App\Models\User::find($this->userId);
-
-            if ($user && ! $user->member_code) {
-                $user->update(['member_code' => $this->generateMemberCode()]);
-            }
-
-            // TODO: 카카오 알림톡 API 연동 전까지는 로그로 대체
-            Log::info("[카톡 발송 예정] {$user->name}({$user->phone}) 회원코드 안내: {$user->member_code}");
-
-            Auth::login($user, remember: true);
-            $this->memberCode = $user->member_code;
-        }
-
-        $this->step = 5;
+        $this->finalizeRegistration();
     }
 }; ?>
 
 <div>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/themes/dark.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+    <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
+    <script>
+        const meewvPortoneConfig = @json([
+            'storeId' => config('services.portone.store_id'),
+            'channelKeys' => [
+                'kakaopay' => config('services.portone.channel_key_kakaopay'),
+                'naverpay' => config('services.portone.channel_key_naverpay'),
+                'tosspay' => config('services.portone.channel_key_tosspay'),
+            ],
+            'amount' => (int)($this - > selectedEventModel ? - > price ?? 0),
+            'phone' => $phone,
+        ]);
 
+        function meewvRequestPortonePay(method) {
+            const providerMap = {
+                kakaopay: 'EASY_PAY_PROVIDER_KAKAOPAY',
+                naverpay: 'EASY_PAY_PROVIDER_NAVERPAY',
+                tosspay: 'EASY_PAY_PROVIDER_TOSSPAY',
+            };
+
+            const storeId = meewvPortoneConfig.storeId;
+            const channelKey = meewvPortoneConfig.channelKeys[method];
+
+            if (!storeId || !channelKey) {
+                alert('결제 연동이 아직 준비 중이에요. 사업자 심사가 완료되면 이용하실 수 있어요.');
+                return;
+            }
+
+            const paymentId = 'meewv-' + Date.now() + '-' + Math.random().toString(16).slice(2, 8);
+
+            PortOne.requestPayment({
+                storeId: storeId,
+                channelKey: channelKey,
+                paymentId: paymentId,
+                orderName: 'MEEWV 참가비',
+                totalAmount: meewvPortoneConfig.amount,
+                currency: 'CURRENCY_KRW',
+                payMethod: 'EASY_PAY',
+                easyPay: {
+                    easyPayProvider: providerMap[method]
+                },
+                customer: {
+                    phoneNumber: meewvPortoneConfig.phone,
+                },
+            }).then((response) => {
+                if (!response || response.code) {
+                    alert('결제에 실패했어요' + (response && response.message ? (': ' + response.message) : '.'));
+                    return;
+                }
+                Livewire.dispatch('portone-payment-done', {
+                    paymentId: response.paymentId,
+                    method: method,
+                });
+            });
+        }
+    </script>
     <style>
         .apply-shell {
             position: relative;
@@ -1019,8 +1090,75 @@ new #[Layout('layouts::auth')] class extends Component
             border-bottom-color: var(--text-mid) !important;
         }
 
+        /* Flatpickr 캘린더 - 살구색 톤 보정 */
+        .flatpickr-calendar {
+            background: var(--peach-card, #fff) !important;
+            border: 1px solid var(--peach-line, var(--line)) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 20px 44px -16px rgba(58, 36, 24, .28) !important;
+        }
+
+        .flatpickr-months {
+            background: var(--peach-deep, #FFE1C6) !important;
+            border-radius: 16px 16px 0 0 !important;
+            padding: 6px 0 !important;
+        }
+
+        .flatpickr-months .flatpickr-month,
+        .flatpickr-current-month,
+        .flatpickr-current-month input.cur-year {
+            color: var(--peach-text, var(--text-hi)) !important;
+            fill: var(--peach-text, var(--text-hi)) !important;
+        }
+
+        .flatpickr-months .flatpickr-prev-month,
+        .flatpickr-months .flatpickr-next-month {
+            fill: var(--peach-text, var(--text-hi)) !important;
+            color: var(--peach-text, var(--text-hi)) !important;
+        }
+
+        .flatpickr-weekdays {
+            background: var(--peach-deep, #FFE1C6) !important;
+        }
+
+        span.flatpickr-weekday {
+            color: var(--peach-orange-deep, var(--spark-orange)) !important;
+            font-weight: 700 !important;
+        }
+
+        .flatpickr-day {
+            color: var(--peach-text-mid, var(--text-mid)) !important;
+            border-radius: 8px !important;
+        }
+
+        .flatpickr-day.selected,
+        .flatpickr-day.selected:hover {
+            background: linear-gradient(95deg, var(--peach-orange, var(--spark-orange)), var(--salmon, var(--spark-pink))) !important;
+            border-color: transparent !important;
+            color: #fff !important;
+        }
+
+        .flatpickr-day.today {
+            border-color: var(--peach-orange, var(--spark-orange)) !important;
+        }
+
+        .flatpickr-day:hover {
+            background: rgba(255, 122, 61, .14) !important;
+        }
+
+        .flatpickr-day.flatpickr-disabled,
+        .flatpickr-day.prevMonthDay,
+        .flatpickr-day.nextMonthDay {
+            color: var(--peach-text-lo, var(--text-lo)) !important;
+            opacity: .5;
+        }
+
+        .numInputWrapper span.arrowUp:after {
+            border-bottom-color: var(--peach-text, var(--text-hi)) !important;
+        }
+
         .numInputWrapper span.arrowDown:after {
-            border-top-color: var(--text-mid) !important;
+            border-top-color: var(--peach-text, var(--text-hi)) !important;
         }
     </style>
 
@@ -1260,7 +1398,7 @@ new #[Layout('layouts::auth')] class extends Component
             </div>
             @endif
 
-            @if ($step === 4)
+            @if ($step === 4)@if ($step === 4)
             <div wire:key="step-4">
                 <button type="button" wire:click="backTo(2)" class="back-link">← 정보 다시 입력</button>
                 <div class="apply-eyebrow"><span class="dot"></span>Payment</div>
@@ -1289,11 +1427,16 @@ new #[Layout('layouts::auth')] class extends Component
                 </div>
                 @error('paymentMethod') <span class="field-error">{{ $message }}</span> @enderror
 
-                @if ($paymentMethod && $paymentMethod !== 'bank_transfer')
-                <div class="pg-note">
-                    <div class="pg-note-icon">🔧</div>
-                    <div class="pg-note-text">결제 연동 준비 중이에요. 지금은 신청만 먼저 접수되고, 결제 안내는 카카오톡으로 별도로 드릴게요.</div>
-                </div>
+                @if (in_array($paymentMethod, ['kakaopay', 'naverpay', 'tosspay']))
+                <button type="button"
+                    onclick="meewvRequestPortonePay('{{ $paymentMethod }}')"
+                    class="btn btn-primary btn-block"
+                    style="margin-top:16px;padding:15px;font-size:15px;">
+                    {{ number_format($this->selectedEventModel?->price ?? 0) }}원 결제하기
+                </button>
+                <p style="font-size:11.5px;color:var(--text-lo);text-align:center;margin-top:10px;">
+                    결제창이 안 뜨면, 아직 결제 심사가 진행 중이라 그럴 수 있어요.
+                </p>
                 @endif
 
                 @if ($paymentMethod === 'bank_transfer')
@@ -1329,11 +1472,11 @@ new #[Layout('layouts::auth')] class extends Component
                     </div>
                 </div>
                 @endif
-                @endif
 
                 <button wire:click="submitPayment" class="btn btn-primary btn-block" style="margin-top:16px;padding:15px;font-size:15px;">
                     신청 완료하기
                 </button>
+                @endif
             </div>
             @endif
 

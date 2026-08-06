@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'portone' => [
+        'store_id' => env('PORTONE_STORE_ID'),
+        'api_secret' => env('PORTONE_API_SECRET'),
+        'channel_key_kakaopay' => env('PORTONE_CHANNEL_KEY_KAKAOPAY'),
+        'channel_key_naverpay' => env('PORTONE_CHANNEL_KEY_NAVERPAY'),
+        'channel_key_tosspay' => env('PORTONE_CHANNEL_KEY_TOSSPAY'),
+    ],
+
 ];

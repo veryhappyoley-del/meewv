@@ -201,6 +201,18 @@ html{scrollbar-width:thin;scrollbar-color:rgba(58,36,24,.15) transparent;}
 .mv-card-block .head{font-weight:700;font-size:15.5px;margin-bottom:4px;}
 .mv-card-block .sub{font-size:12.5px;color:var(--text-mid);margin-bottom:14px;}
 .mv-divider{border-top:1px solid var(--line);margin:14px 0;padding-top:14px;}
+
+.tab-btn{
+    padding:11px 14px;border-radius:12px;border:1px solid var(--line);
+    background:rgba(58,36,24,.02);color:var(--text-mid);font-weight:700;font-size:13.5px;
+    cursor:pointer;transition:all .15s;font-family:var(--font-body);
+}
+.tab-btn:hover{background:rgba(58,36,24,.05);color:var(--text-hi);}
+.tab-btn.active{
+    background:linear-gradient(95deg,var(--spark-orange),var(--spark-pink));
+    color:#fff;border-color:transparent;box-shadow:0 6px 16px -6px rgba(255,151,112,.5);
+}
+
     </style>
 </head>
 <body>
