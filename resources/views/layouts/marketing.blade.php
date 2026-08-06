@@ -72,13 +72,30 @@ html{scrollbar-width:thin;scrollbar-color:rgba(58,36,24,.15) transparent;}
 
 .footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:40px 24px;text-align:center;color:var(--text-lo);font-size:12.5px;}
 
-@media (max-width:820px){ .nav-links{display:none;} }
+.nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px;}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--text-hi);border-radius:2px;transition:all .2s;}
+.nav-mobile-menu{display:none;position:fixed;top:0;right:0;bottom:0;width:78%;max-width:320px;
+    background:var(--peach-bg,#FFF3E9);z-index:100;box-shadow:-12px 0 40px -12px rgba(58,36,24,.25);
+    padding:24px 22px;flex-direction:column;gap:4px;overflow-y:auto;}
+.nav-mobile-menu.open{display:flex;}
+.nav-mobile-overlay{display:none;position:fixed;inset:0;background:rgba(58,36,24,.35);z-index:99;}
+.nav-mobile-overlay.open{display:block;}
+.nav-mobile-close{align-self:flex-end;background:none;border:none;font-size:22px;color:var(--text-mid);
+    cursor:pointer;padding:6px;margin-bottom:12px;}
+.nav-mobile-menu a{display:block;padding:14px 6px;font-size:16px;font-weight:600;color:var(--text-hi);
+    border-bottom:1px solid var(--line);}
+.nav-mobile-menu a.btn-primary{margin-top:16px;text-align:center;border-bottom:none;color:#fff;}
+
+@media (max-width:820px){
+    .nav-links{display:none;}
+    .nav-hamburger{display:flex;}
+}
     </style>
 </head>
 <body>
 <div class="mv-ambient"></div>
 
-<header class="nav">
+<header class="nav" x-data="{ mobileOpen: false }">
     <div class="nav-inner">
         <a href="/" class="logo">
             <img class="logo-mark" src="/images/logo_simbol.png" alt="MEEWV">MEEWV
@@ -98,6 +115,25 @@ html{scrollbar-width:thin;scrollbar-color:rgba(58,36,24,.15) transparent;}
             @endauth
             <a href="/apply" class="btn btn-primary btn-sm">참가 신청</a>
         </div>
+        <button type="button" class="nav-hamburger" @click="mobileOpen = true" aria-label="메뉴 열기">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+
+    <div class="nav-mobile-overlay" :class="{ open: mobileOpen }" @click="mobileOpen = false"></div>
+    <div class="nav-mobile-menu" :class="{ open: mobileOpen }">
+        <button type="button" class="nav-mobile-close" @click="mobileOpen = false" aria-label="메뉴 닫기">×</button>
+        <a href="#about" @click="mobileOpen = false">소개</a>
+        <a href="#how" @click="mobileOpen = false">이용방법</a>
+        <a href="#locations" @click="mobileOpen = false">지점</a>
+        <a href="/crew" @click="mobileOpen = false">크루소개</a>
+        <a href="/crew-apply" @click="mobileOpen = false">크루제안</a>
+        @auth
+            <a href="/mypage" @click="mobileOpen = false">마이페이지</a>
+        @else
+            <a href="/login" @click="mobileOpen = false">로그인</a>
+        @endauth
+        <a href="/apply" class="btn btn-primary" @click="mobileOpen = false">참가 신청</a>
     </div>
 </header>
 

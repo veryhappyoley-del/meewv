@@ -265,6 +265,16 @@ new #[Layout('layouts::auth')] class extends Component
             max-width: 92vw;
         }
 
+        @media (max-width:700px) {
+            .apply-shell {
+                position: static;
+                left: auto;
+                transform: none;
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
         .apply-glow {
             position: absolute;
             top: -140px;
