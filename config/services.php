@@ -43,4 +43,12 @@ return [
         'channel_key_tosspay' => env('PORTONE_CHANNEL_KEY_TOSSPAY'),
     ],
 
+    'solapi' => [
+        'api_key' => env('SOLAPI_API_KEY'),
+        'api_secret' => env('SOLAPI_API_SECRET'),
+        'sender_number' => env('SOLAPI_SENDER_NUMBER'),
+        'kakao_pf_id' => env('SOLAPI_KAKAO_PF_ID'),
+        'template_verification' => env('SOLAPI_TEMPLATE_VERIFICATION'),
+    ],
+
 ];

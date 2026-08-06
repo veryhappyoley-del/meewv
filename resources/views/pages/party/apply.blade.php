@@ -280,7 +280,7 @@ new #[Layout('layouts::auth')] class extends Component
                 'naverpay' => config('services.portone.channel_key_naverpay'),
                 'tosspay' => config('services.portone.channel_key_tosspay'),
             ],
-            'amount' => (int)($this - > selectedEventModel ? - > price ?? 0),
+            'amount' => (int) ($this->selectedEventModel?->price ?? 0),
             'phone' => $phone,
         ]);
 

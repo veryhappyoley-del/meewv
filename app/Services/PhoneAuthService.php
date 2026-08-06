@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Log;
 
 class PhoneAuthService
 {
+    public function __construct(
+        private SolapiService $solapi
+    ) {}
+
     public function sendCode(string $phone): void
     {
         $code = (string) random_int(100000, 999999);
@@ -18,7 +22,12 @@ class PhoneAuthService
             'expires_at' => now()->addMinutes(5),
         ]);
 
-        Log::info("[인증번호] {$phone} → {$code}");
+        $sent = $this->solapi->sendVerificationCode($phone, $code);
+
+        if (! $sent) {
+            // 발송 API가 아직 설정 안 됐거나 실패한 경우, 로그로 확인할 수 있게 남겨둬요.
+            Log::info("[인증번호] {$phone} → {$code}");
+        }
     }
 
     public function verifyCode(string $phone, string $code): bool
