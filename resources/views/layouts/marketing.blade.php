@@ -39,7 +39,7 @@
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
-body{background:var(--void-1);color:var(--text-hi);font-family:var(--font-body);line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased;}
+body{background:var(--void-1);color:var(--text-hi);font-family:var(--font-body);line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 a{color:inherit;text-decoration:none;}
 ::selection{background:var(--spark-pink);color:#fff;}
 
@@ -72,22 +72,24 @@ html{scrollbar-width:thin;scrollbar-color:rgba(58,36,24,.15) transparent;}
 
 .footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:40px 24px;text-align:center;color:var(--text-lo);font-size:12.5px;}
 
-.nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px;}
-.nav-hamburger span{display:block;width:22px;height:2px;background:var(--text-hi);border-radius:2px;transition:all .2s;}
-.nav-mobile-menu{display:none;position:fixed;top:0;right:0;bottom:0;width:78%;max-width:320px;
-    background:var(--peach-bg,#FFF3E9);z-index:100;box-shadow:-12px 0 40px -12px rgba(58,36,24,.25);
-    padding:24px 22px;flex-direction:column;gap:4px;overflow-y:auto;}
+.nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px;flex-shrink:0;}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--text-hi);border-radius:2px;}
+
+.nav-mobile-menu{
+    display:none;position:fixed;inset:0;z-index:200;
+    background:var(--peach-bg,#FFF3E9);
+    flex-direction:column;padding:20px 22px;overflow-y:auto;
+}
 .nav-mobile-menu.open{display:flex;}
-.nav-mobile-overlay{display:none;position:fixed;inset:0;background:rgba(58,36,24,.35);z-index:99;}
-.nav-mobile-overlay.open{display:block;}
-.nav-mobile-close{align-self:flex-end;background:none;border:none;font-size:22px;color:var(--text-mid);
-    cursor:pointer;padding:6px;margin-bottom:12px;}
-.nav-mobile-menu a{display:block;padding:14px 6px;font-size:16px;font-weight:600;color:var(--text-hi);
-    border-bottom:1px solid var(--line);}
-.nav-mobile-menu a.btn-primary{margin-top:16px;text-align:center;border-bottom:none;color:#fff;}
+.nav-mobile-menu-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
+.nav-mobile-menu-head .logo{font-size:22px;}
+.nav-mobile-close{background:none;border:none;font-size:30px;line-height:1;color:var(--text-mid);cursor:pointer;padding:4px 8px;}
+.nav-mobile-links a{display:block;padding:16px 4px;font-size:18px;font-weight:700;color:var(--text-hi);border-bottom:1px solid var(--line);}
+.nav-mobile-links a.btn-primary{margin-top:22px;text-align:center;border-bottom:none;color:#fff;padding:15px;}
 
 @media (max-width:820px){
     .nav-links{display:none;}
+    .nav-cta-group{display:none;}
     .nav-hamburger{display:flex;}
 }
     </style>
@@ -120,20 +122,26 @@ html{scrollbar-width:thin;scrollbar-color:rgba(58,36,24,.15) transparent;}
         </button>
     </div>
 
-    <div class="nav-mobile-overlay" :class="{ open: mobileOpen }" @click="mobileOpen = false"></div>
-    <div class="nav-mobile-menu" :class="{ open: mobileOpen }">
-        <button type="button" class="nav-mobile-close" @click="mobileOpen = false" aria-label="메뉴 닫기">×</button>
-        <a href="#about" @click="mobileOpen = false">소개</a>
-        <a href="#how" @click="mobileOpen = false">이용방법</a>
-        <a href="#locations" @click="mobileOpen = false">지점</a>
-        <a href="/crew" @click="mobileOpen = false">크루소개</a>
-        <a href="/crew-apply" @click="mobileOpen = false">크루제안</a>
-        @auth
-            <a href="/mypage" @click="mobileOpen = false">마이페이지</a>
-        @else
-            <a href="/login" @click="mobileOpen = false">로그인</a>
-        @endauth
-        <a href="/apply" class="btn btn-primary" @click="mobileOpen = false">참가 신청</a>
+    <div class="nav-mobile-menu" :class="{ open: mobileOpen }" x-cloak>
+        <div class="nav-mobile-menu-head">
+            <a href="/" class="logo">
+                <img class="logo-mark" src="/images/logo_simbol.png" alt="MEEWV">MEEWV
+            </a>
+            <button type="button" class="nav-mobile-close" @click="mobileOpen = false" aria-label="메뉴 닫기">×</button>
+        </div>
+        <div class="nav-mobile-links">
+            <a href="#about" @click="mobileOpen = false">소개</a>
+            <a href="#how" @click="mobileOpen = false">이용방법</a>
+            <a href="#locations" @click="mobileOpen = false">지점</a>
+            <a href="/crew" @click="mobileOpen = false">크루소개</a>
+            <a href="/crew-apply" @click="mobileOpen = false">크루제안</a>
+            @auth
+                <a href="/mypage" @click="mobileOpen = false">마이페이지</a>
+            @else
+                <a href="/login" @click="mobileOpen = false">로그인</a>
+            @endauth
+            <a href="/apply" class="btn btn-primary" @click="mobileOpen = false">참가 신청</a>
+        </div>
     </div>
 </header>
 

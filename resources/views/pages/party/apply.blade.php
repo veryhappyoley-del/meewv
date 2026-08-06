@@ -361,7 +361,9 @@ new #[Layout('layouts::auth')] class extends Component
             opacity: 0.28;
             animation: apply-spin 30s linear infinite;
         }
-
+        @media (max-width:600px){
+            .apply-glow{width:100vw;height:100vw;}
+        }
         @keyframes apply-spin {
             to {
                 transform: translateX(-50%) rotate(360deg);

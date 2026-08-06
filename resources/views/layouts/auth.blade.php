@@ -49,14 +49,7 @@
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
-body{
-  background:var(--void-1);
-  color:var(--text-hi);
-  font-family:var(--font-body);
-  line-height:1.5;
-  min-height:100vh;
-  -webkit-font-smoothing:antialiased;
-}
+body{background:var(--void-1);color:var(--text-hi);font-family:var(--font-body);line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 a{color:inherit;text-decoration:none;}
 ::selection{background:var(--spark-pink);color:#fff;}
 
