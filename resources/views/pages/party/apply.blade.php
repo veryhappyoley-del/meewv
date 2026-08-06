@@ -273,16 +273,20 @@ new #[Layout('layouts::auth')] class extends Component
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
     <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
     <script>
-        const meewvPortoneConfig = @json([
-            'storeId' => config('services.portone.store_id'),
-            'channelKeys' => [
-                'kakaopay' => config('services.portone.channel_key_kakaopay'),
-                'naverpay' => config('services.portone.channel_key_naverpay'),
-                'tosspay' => config('services.portone.channel_key_tosspay'),
-            ],
-            'amount' => (int) ($this->selectedEventModel?->price ?? 0),
-            'phone' => $phone,
-        ]);
+        @php
+            $meewvPortoneConfigArr = [
+                'storeId' => config('services.portone.store_id'),
+                'channelKeys' => [
+                    'kakaopay' => config('services.portone.channel_key_kakaopay'),
+                    'naverpay' => config('services.portone.channel_key_naverpay'),
+                    'tosspay' => config('services.portone.channel_key_tosspay'),
+                ],
+                'amount' => (int) ($this->selectedEventModel?->price ?? 0),
+                'phone' => $phone,
+            ];
+        @endphp
+     <script>
+        const meewvPortoneConfig = @json($meewvPortoneConfigArr);
 
         function meewvRequestPortonePay(method) {
             const providerMap = {
