@@ -97,30 +97,32 @@ html{scrollbar-width:thin;scrollbar-color:rgba(58,36,24,.15) transparent;}
 <body>
 <div class="mv-ambient"></div>
 
-<header class="nav" x-data="{ mobileOpen: false }">
-    <div class="nav-inner">
-        <a href="/" class="logo">
-            <img class="logo-mark" src="/images/logo_simbol.png" alt="MEEWV">MEEWV
-        </a>
-        <nav class="nav-links">
-            <a href="#about">소개</a>
-            <a href="#how">이용방법</a>
-            <a href="#locations">지점</a>
-            <a href="/crew">크루소개</a>
-            <a href="/crew-apply">크루제안</a>
-        </nav>
-        <div class="nav-cta-group">
-            @auth
-                <a href="/mypage" class="nav-login">마이페이지</a>
-            @else
-                <a href="/login" class="nav-login">로그인</a>
-            @endauth
-            <a href="/apply" class="btn btn-primary btn-sm">참가 신청</a>
+<div x-data="{ mobileOpen: false }">
+    <header class="nav">
+        <div class="nav-inner">
+            <a href="/" class="logo">
+                <img class="logo-mark" src="/images/logo_simbol.png" alt="MEEWV">MEEWV
+            </a>
+            <nav class="nav-links">
+                <a href="#about">소개</a>
+                <a href="#how">이용방법</a>
+                <a href="#locations">지점</a>
+                <a href="/crew">크루소개</a>
+                <a href="/crew-apply">크루제안</a>
+            </nav>
+            <div class="nav-cta-group">
+                @auth
+                    <a href="/mypage" class="nav-login">마이페이지</a>
+                @else
+                    <a href="/login" class="nav-login">로그인</a>
+                @endauth
+                <a href="/apply" class="btn btn-primary btn-sm">참가 신청</a>
+            </div>
+            <button type="button" class="nav-hamburger" @click="mobileOpen = true" aria-label="메뉴 열기">
+                <span></span><span></span><span></span>
+            </button>
         </div>
-        <button type="button" class="nav-hamburger" @click="mobileOpen = true" aria-label="메뉴 열기">
-            <span></span><span></span><span></span>
-        </button>
-    </div>
+    </header>
 
     <div class="nav-mobile-menu" :class="{ open: mobileOpen }" x-cloak>
         <div class="nav-mobile-menu-head">
@@ -143,7 +145,7 @@ html{scrollbar-width:thin;scrollbar-color:rgba(58,36,24,.15) transparent;}
             <a href="/apply" class="btn btn-primary" @click="mobileOpen = false">참가 신청</a>
         </div>
     </div>
-</header>
+</div>
 
 {{ $slot }}
 
