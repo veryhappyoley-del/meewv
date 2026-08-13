@@ -66,13 +66,17 @@ new #[Layout('layouts::auth')] class extends Component
     </div>
 
     @forelse ($this->pendingSignals as $signal)
+        @php $senderName = $signal->sender->nickname ?: $signal->sender->name; @endphp
         <div wire:key="signal-{{ $signal->id }}" class="mv-card-block">
-            <div class="head">{{ $signal->sender->name }}님이 시그널을 보냈어요</div>
-            <div class="sub">{{ $signal->sender->job }} · {{ $signal->event->location?->name }}</div>
+            <div class="head">{{ $senderName }}님이 시그널을 보냈어요</div>
+            <div class="sub">{{ $signal->sender->hobbies_interests }} · {{ $signal->event->location?->name }}</div>
 
             @if ($respondingTo === $signal->id)
                 <div class="mv-divider">
                     <p style="font-size:13.5px;font-weight:600;color:var(--text-mid);margin:0 0 10px;">공개할 내 정보를 선택하세요</p>
+                    <label class="check-row">
+                        <input type="checkbox" wire:model="disclose" value="name"> 실명
+                    </label>
                     <label class="check-row">
                         <input type="checkbox" wire:model="disclose" value="phone"> 전화번호
                     </label>

@@ -24,12 +24,15 @@ new #[Layout('layouts::auth')] class extends Component
     public string $name = '';
     public string $birth_date = '';
     public string $gender = '';
-    public array $photos = [];
+    public $photoMain = null;
+    public $photoLifestyle = null;
     public string $phone = '';
     public string $bio = '';
     public string $job = '';
     public string $instagram_handle = '';
     public string $hobbies_interests = '';
+    public string $nickname = '';
+    public string $mbti = '';
     public ?int $height = null;
     public string $dating_style = '';
     public string $ideal_type = '';
@@ -44,6 +47,9 @@ new #[Layout('layouts::auth')] class extends Component
     public ?int $userId = null;
     public string $paymentMethod = '';
     public string $depositorName = '';
+    public string $refundBankName = '';
+    public string $refundAccountNumber = '';
+    public string $refundAccountHolder = '';
     public bool $cashReceiptRequested = false;
     public string $cashReceiptType = 'personal';
     public string $cashReceiptNumber = '';
@@ -97,11 +103,6 @@ new #[Layout('layouts::auth')] class extends Component
         $this->step = $step;
     }
 
-    public function removePhoto(int $index): void
-    {
-        unset($this->photos[$index]);
-        $this->photos = array_values($this->photos);
-    }
 
     public function submitProfile(PhoneAuthService $service)
     {
@@ -109,21 +110,25 @@ new #[Layout('layouts::auth')] class extends Component
             'name' => 'required|string|max:50',
             'birth_date' => 'required|date',
             'gender' => 'required|in:male,female',
-            'photos' => 'required|array|min:1|max:4',
-            'photos.*' => 'image|max:5120',
+            'nickname' => 'required|string|max:20',
+            'photoMain' => 'required|image|max:5120',
+            'photoLifestyle' => 'required|image|max:5120',
+            'mbti' => 'nullable|string|max:4',
             'phone' => 'required|regex:/^01[0-9]{8,9}$/',
             'bio' => 'required|string|max:500',
             'job' => 'nullable|string|max:100',
             'instagram_handle' => 'nullable|string|max:50',
+            'nickname' => 'required|string|max:20',
             'hobbies_interests' => 'nullable|string|max:500',
             'height' => 'nullable|integer|min:100|max:250',
             'dating_style' => 'nullable|string|max:100',
             'ideal_type' => 'nullable|string|max:100',
+            'mbti' => 'nullable|string|max:4',
             'privacyConsent' => 'accepted',
         ], [
             'phone.regex' => '올바른 휴대폰 번호를 입력해주세요. (- 없이 숫자만)',
-            'photos.required' => '사진을 1장 이상 올려주세요.',
-            'photos.max' => '사진은 최대 4장까지 올릴 수 있어요.',
+            'photoMain.required' => '메인 사진을 올려주세요.',
+            'photoLifestyle.required' => '일상·취미 사진을 올려주세요.',
             'privacyConsent.accepted' => '개인정보 수집·이용에 동의해주셔야 신청할 수 있어요.',
         ]);
 
@@ -142,19 +147,23 @@ new #[Layout('layouts::auth')] class extends Component
             return;
         }
 
-        $photoPaths = [];
-        foreach ($this->photos as $photo) {
-            $photoPaths[] = $photo->store('profile-photos', 'public');
-        }
+        $photoPaths = [
+            $this->photoMain->store('profile-photos', 'public'),
+            $this->photoLifestyle->store('profile-photos', 'public'),
+        ];
 
         $profile = [
             'name' => $this->name,
+            'nickname' => $this->nickname,
+            'mbti' => $this->mbti,
             'birth_date' => $this->birth_date,
             'gender' => $this->gender,
             'bio' => $this->bio,
             'job' => $this->job,
             'instagram_handle' => $this->instagram_handle,
             'hobbies_interests' => $this->hobbies_interests,
+            'nickname' => $this->nickname,
+            'mbti' => $this->mbti,
             'height' => $this->height,
             'dating_style' => $this->dating_style,
             'ideal_type' => $this->ideal_type,
@@ -227,10 +236,10 @@ new #[Layout('layouts::auth')] class extends Component
 
         $this->step = 5;
     }
+
     private function generateMemberCode(): string
     {
-        $chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
-
+        $chars = 'ABCDEFGHJKMNRSTUVWXYZ23456789';
         do {
             $code = '';
             for ($i = 0; $i < 8; $i++) {
@@ -245,9 +254,15 @@ new #[Layout('layouts::auth')] class extends Component
     {
         $this->validate([
             'depositorName' => 'required|string|max:50',
+            'refundBankName' => 'required|string|max:50',
+            'refundAccountNumber' => 'required|string|max:50',
+            'refundAccountHolder' => 'required|string|max:50',
             'cashReceiptType' => $this->cashReceiptRequested ? 'required|in:personal,business' : 'nullable',
             'cashReceiptNumber' => $this->cashReceiptRequested ? 'required|string|max:30' : 'nullable',
         ], [
+            'refundBankName.required' => '환불받으실 은행을 입력해주세요.',
+            'refundAccountNumber.required' => '환불받으실 계좌번호를 입력해주세요.',
+            'refundAccountHolder.required' => '예금주명을 입력해주세요.',
             'depositorName.required' => '입금자명을 입력해주세요.',
             'cashReceiptNumber.required' => '현금영수증 발급 번호를 입력해주세요.',
         ]);
@@ -259,6 +274,9 @@ new #[Layout('layouts::auth')] class extends Component
             'method' => 'bank_transfer',
             'status' => 'pending',
             'depositor_name' => $this->depositorName ?: null,
+            'refund_bank_name' => $this->refundBankName ?: null,
+            'refund_account_number' => $this->refundAccountNumber ?: null,
+            'refund_account_holder' => $this->refundAccountHolder ?: null,
             'cash_receipt_requested' => $this->cashReceiptRequested,
             'cash_receipt_type' => $this->cashReceiptRequested ? $this->cashReceiptType : null,
             'cash_receipt_number' => $this->cashReceiptRequested ? $this->cashReceiptNumber : null,
@@ -269,23 +287,22 @@ new #[Layout('layouts::auth')] class extends Component
 }; ?>
 
 <div>
+    @php
+    $meewvPortoneConfigArr = [
+    'storeId' => config('services.portone.store_id'),
+    'channelKeys' => [
+    'kakaopay' => config('services.portone.channel_key_kakaopay'),
+    'naverpay' => config('services.portone.channel_key_naverpay'),
+    'tosspay' => config('services.portone.channel_key_tosspay'),
+    ],
+    'amount' => (int) ($this->selectedEventModel?->price ?? 0),
+    'phone' => $phone,
+    ];
+    @endphp
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
     <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
     <script>
-        @php
-            $meewvPortoneConfigArr = [
-                'storeId' => config('services.portone.store_id'),
-                'channelKeys' => [
-                    'kakaopay' => config('services.portone.channel_key_kakaopay'),
-                    'naverpay' => config('services.portone.channel_key_naverpay'),
-                    'tosspay' => config('services.portone.channel_key_tosspay'),
-                ],
-                'amount' => (int) ($this->selectedEventModel?->price ?? 0),
-                'phone' => $phone,
-            ];
-        @endphp
-     <script>
         const meewvPortoneConfig = @json($meewvPortoneConfigArr);
 
         function meewvRequestPortonePay(method) {
@@ -332,6 +349,29 @@ new #[Layout('layouts::auth')] class extends Component
         }
     </script>
     <style>
+        .priv-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 999px;
+            margin-left: 6px;
+            letter-spacing: .01em;
+            vertical-align: middle;
+        }
+
+        .priv-badge.pub {
+            background: rgba(255, 122, 61, .14);
+            color: var(--spark-orange);
+            border: 1px solid rgba(255, 122, 61, .3);
+        }
+
+        .priv-badge.priv {
+            background: rgba(58, 36, 24, .05);
+            color: var(--text-lo);
+            border: 1px solid var(--line);
+        }
+
         .apply-shell {
             position: relative;
             left: 50%;
@@ -365,9 +405,14 @@ new #[Layout('layouts::auth')] class extends Component
             opacity: 0.28;
             animation: apply-spin 30s linear infinite;
         }
-        @media (max-width:600px){
-            .apply-glow{width:100vw;height:100vw;}
+
+        @media (max-width:600px) {
+            .apply-glow {
+                width: 100vw;
+                height: 100vw;
+            }
         }
+
         @keyframes apply-spin {
             to {
                 transform: translateX(-50%) rotate(360deg);
@@ -655,6 +700,29 @@ new #[Layout('layouts::auth')] class extends Component
             vertical-align: middle;
         }
 
+        .priv-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 999px;
+            margin-left: 6px;
+            letter-spacing: .01em;
+            vertical-align: middle;
+        }
+
+        .priv-badge.pub {
+            background: rgba(255, 122, 61, .14);
+            color: var(--spark-orange);
+            border: 1px solid rgba(255, 122, 61, .3);
+        }
+
+        .priv-badge.priv {
+            background: rgba(58, 36, 24, .05);
+            color: var(--text-lo);
+            border: 1px solid var(--line);
+        }
+
         .photo-drop {
             display: block;
             border: 1.5px dashed var(--line);
@@ -775,6 +843,9 @@ new #[Layout('layouts::auth')] class extends Component
             font-family: var(--font-display);
             padding: 16px 10px 16px 24px;
             color: var(--text-hi);
+            background: var(--card);
+            border: 1.5px solid var(--line);
+            border-radius: 12px;
         }
 
         .pay-method-grid {
@@ -906,10 +977,10 @@ new #[Layout('layouts::auth')] class extends Component
         }
 
         .code-value {
-            font-family: var(--font-display);
+            font-family: var(--font-body);
             font-weight: 800;
             font-size: 24px;
-            letter-spacing: 5px;
+            letter-spacing: 4px;
             background: linear-gradient(95deg, var(--spark-orange), var(--spark-pink));
             -webkit-background-clip: text;
             background-clip: text;
@@ -1260,9 +1331,15 @@ new #[Layout('layouts::auth')] class extends Component
                 <div class="section-label">기본 정보</div>
 
                 <div class="field">
-                    <label>이름<span class="req-badge">필수</span></label>
+                    <label>이름<span class="req-badge">필수</span><span class="priv-badge priv">저만 봐요!</span></label>
                     <input type="text" wire:model="name">
                     @error('name') <span class="field-error">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="field">
+                    <label>닉네임<span class="req-badge">필수</span><span class="priv-badge pub">공개돼요!</span></label>
+                    <input type="text" wire:model="nickname" placeholder="다른 참석자에게 보일 이름이에요" maxlength="20">
+                    @error('nickname') <span class="field-error">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="form-row-2">
@@ -1275,12 +1352,12 @@ new #[Layout('layouts::auth')] class extends Component
                                 flatpickr($refs.birthInput, { dateFormat: 'Y-m-d', maxDate: 'today' });
                             })();
                         ">
-                        <label>생년월일<span class="req-badge">필수</span></label>
+                        <label>생년월일<span class="req-badge">필수</span><span class="priv-badge priv">저만 봐요!</span></label>
                         <input type="text" wire:model="birth_date" x-ref="birthInput" readonly placeholder="날짜를 선택해주세요">
                         @error('birth_date') <span class="field-error">{{ $message }}</span> @enderror
                     </div>
                     <div class="field">
-                        <label>성별<span class="req-badge">필수</span></label>
+                        <label>성별<span class="req-badge">필수</span><span class="priv-badge pub">공개돼요!</span></label>
                         <div class="gender-radio-group">
                             <label class="gender-radio {{ $gender === 'male' ? 'active' : '' }}">
                                 <input type="radio" wire:model.live="gender" value="male">
@@ -1296,80 +1373,84 @@ new #[Layout('layouts::auth')] class extends Component
                 </div>
 
                 <div class="field">
-                    <label>전화번호<span class="req-badge">필수</span></label>
+                    <label>전화번호<span class="req-badge">필수</span><span class="priv-badge priv">저만 봐요!</span></label>
                     <input type="text" wire:model="phone" placeholder="01012345678">
                     @error('phone') <span class="field-error">{{ $message }}</span> @enderror
                 </div>
 
-                <div class="section-label">사진 (최대 4장)<span class="req-badge">필수</span></div>
+                <div class="section-label">사진 (필수 2장)<span class="priv-badge priv" style="margin-left:8px;">관리자만 봐요!</span></div>
+                <p style="font-size:12px;color:var(--text-lo);margin:-6px 0 14px;">업로드하신 사진은 신원 확인 목적으로 관리자만 확인해요. 다른 참석자에게는 절대 공개되지 않아요.</p>
+
+                <label class="photo-drop" style="margin-bottom:10px;">
+                    <input type="file" wire:model="photoMain" accept="image/*" class="photo-drop-input">
+                    <div class="photo-drop-icon">📷</div>
+                    <div class="photo-drop-text">사진 1 · 메인 사진</div>
+                    <div class="photo-drop-sub">얼굴이 잘 나온 사진으로 올려주세요</div>
+                </label>
+                @if ($photoMain)
+                <div class="photo-thumbs" style="margin-bottom:10px;">
+                    <img src="{{ $photoMain->temporaryUrl() }}">
+                </div>
+                @endif
+                @error('photoMain') <span class="field-error">{{ $message }}</span> @enderror
 
                 <label class="photo-drop">
-                    <input type="file" wire:model="photos" multiple accept="image/*" class="photo-drop-input">
-                    <div class="photo-drop-icon">📷</div>
-                    <div class="photo-drop-text">눌러서 사진 선택</div>
-                    <div class="photo-drop-sub">밝고 자연스러운 사진일수록 좋아요</div>
+                    <input type="file" wire:model="photoLifestyle" accept="image/*" class="photo-drop-input">
+                    <div class="photo-drop-icon">🌿</div>
+                    <div class="photo-drop-text">사진 2 · 일상·취미 사진</div>
+                    <div class="photo-drop-sub">여행지나 평소 모습이 담긴 사진이면 좋아요</div>
                 </label>
-                @error('photos') <span class="field-error">{{ $message }}</span> @enderror
-                @error('photos.*') <span class="field-error">{{ $message }}</span> @enderror
-
-                @if (count($photos))
-                <div class="photo-thumbs">
-                    @foreach ($photos as $index => $p)
-                    @php
-                    $ext = strtolower($p->getClientOriginalExtension());
-                    $previewable = in_array($ext, ['png','jpg','jpeg','gif','bmp','webp']);
-                    @endphp
-                    <div class="photo-thumb-wrap" wire:key="photo-{{ $index }}">
-                        @if ($previewable)
-                        <img src="{{ $p->temporaryUrl() }}">
-                        @else
-                        <div class="photo-thumb-fallback">.{{ $ext ?: '?' }}</div>
-                        @endif
-                        <button type="button" wire:click="removePhoto({{ $index }})" class="photo-remove-btn" aria-label="사진 삭제">×</button>
-                    </div>
-                    @endforeach
+                @if ($photoLifestyle)
+                <div class="photo-thumbs" style="margin-top:10px;">
+                    <img src="{{ $photoLifestyle->temporaryUrl() }}">
                 </div>
-                <div class="photo-count">{{ count($photos) }}/4장 선택됨</div>
                 @endif
+                @error('photoLifestyle') <span class="field-error">{{ $message }}</span> @enderror
 
                 <div class="section-label">소개</div>
 
                 <div class="field">
-                    <label>간략한 소개글<span class="req-badge">필수</span></label>
+                    <label>한줄소개<span class="req-badge">필수</span><span class="priv-badge pub">공개돼요!</span></label>
                     <textarea wire:model="bio" rows="3" placeholder="어떤 사람인지 편하게 소개해주세요"></textarea>
                     @error('bio') <span class="field-error">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="form-row-2">
                     <div class="field">
-                        <label>직업</label>
+                        <label>직업<span class="priv-badge priv">저만 봐요!</span></label>
                         <input type="text" wire:model="job">
                     </div>
                     <div class="field">
-                        <label>인스타그램</label>
-                        <input type="text" wire:model="instagram_handle" placeholder="@handle">
+                        <label>MBTI<span class="req-badge">필수</span><span class="priv-badge pub">공개돼요!</span></label>
+                        <input type="text" wire:model="mbti" placeholder="예: ENFP" maxlength="4" style="text-transform:uppercase;">
                     </div>
                 </div>
 
                 <div class="field">
-                    <label>취미 및 요즘 관심사</label>
-                    <textarea wire:model="hobbies_interests" rows="3"></textarea>
+                    <label>인스타그램<span class="priv-badge priv">저만 봐요!</span></label>
+                    <input type="text" wire:model="instagram_handle" placeholder="@handle">
+                </div>
+
+                <div class="field">
+                    <label>취미 및 관심사<span class="req-badge">필수</span><span class="priv-badge pub">공개돼요!</span></label>
+                    <textarea wire:model="hobbies_interests" rows="2" placeholder="예: 운동, 여행, 카페, 없음"></textarea>
                 </div>
                 <div class="section-label">연애 스타일</div>
 
                 <div class="form-row-2">
                     <div class="field">
-                        <label>키 (cm)</label>
+                        <label>키 (cm)<span class="req-badge">필수</span><span class="priv-badge pub">공개돼요!</span></label>
                         <input type="number" wire:model="height" placeholder="170">
+                        @error('height') <span class="field-error">{{ $message }}</span> @enderror
                     </div>
                     <div class="field">
-                        <label>연애 스타일</label>
+                        <label>연애 스타일<span class="req-badge">필수</span><span class="priv-badge pub">공개돼요!</span></label>
                         <input type="text" wire:model="dating_style" placeholder="예: 다정한 스타일">
                     </div>
                 </div>
 
                 <div class="field">
-                    <label>이상형</label>
+                    <label>이상형<span class="req-badge">필수</span><span class="priv-badge pub">공개돼요!</span></label>
                     <input type="text" wire:model="ideal_type" placeholder="예: 대화가 잘 통하는 사람">
                 </div>
                 <div class="privacy-consent-box">
@@ -1458,6 +1539,28 @@ new #[Layout('layouts::auth')] class extends Component
                     @error('depositorName') <span class="field-error">{{ $message }}</span> @enderror
                 </div>
 
+                <div class="section-label">환불 계좌<span class="priv-badge priv" style="margin-left:8px;">관리자만 봐요!</span></div>
+                <p style="font-size:12px;color:var(--text-lo);margin:-6px 0 14px;">신청이 거절되면 이 계좌로 참가비를 돌려드려요.</p>
+
+                <div class="form-row-2">
+                    <div class="field">
+                        <label>은행<span class="req-badge">필수</span></label>
+                        <input type="text" wire:model="refundBankName" placeholder="예: 카카오뱅크">
+                        @error('refundBankName') <span class="field-error">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="field">
+                        <label>계좌번호<span class="req-badge">필수</span></label>
+                        <input type="text" wire:model="refundAccountNumber" placeholder="- 없이 숫자만">
+                        @error('refundAccountNumber') <span class="field-error">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>예금주<span class="req-badge">필수</span></label>
+                    <input type="text" wire:model="refundAccountHolder" placeholder="본인 명의로 입력해주세요">
+                    @error('refundAccountHolder') <span class="field-error">{{ $message }}</span> @enderror
+                </div>
+
                 <label class="check-row" style="padding:4px 0 12px;">
                     <input type="checkbox" wire:model.live="cashReceiptRequested"> 현금영수증 신청
                 </label>
@@ -1500,6 +1603,14 @@ new #[Layout('layouts::auth')] class extends Component
                 <div class="code-card">
                     <div class="code-label">내 회원코드</div>
                     <div class="code-value">{{ $memberCode }}</div>
+                     @if ($attendeeId)
+                        @php $token = \App\Models\EventAttendee::find($attendeeId)?->checkin_token; @endphp
+                        @if ($token)
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data={{ urlencode(url('/checkin/' . $token)) }}"
+                                alt="입장 QR코드" style="width:160px;height:160px;margin:16px auto 0;display:block;border-radius:12px;">
+                            <p style="font-size:11.5px;color:var(--text-lo);margin-top:8px;">입장할 때 이 QR코드를 보여주세요</p>
+                        @endif
+                    @endif
                     <div class="code-hint">카카오톡으로도 보내드렸어요. 다음부터는 이 코드로 바로 로그인할 수 있어요.</div>
                 </div>
                 @endif

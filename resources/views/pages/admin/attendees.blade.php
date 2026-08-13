@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Models\Event;
@@ -52,7 +53,7 @@ new #[Layout('layouts::app', ['title' => '신청 승인'])] class extends Compon
             return collect();
         }
 
-        return EventAttendee::with('user')
+        return EventAttendee::with(['user', 'payment'])
             ->where('event_id', $this->selectedEventId)
             ->where('approval_status', 'pending')
             ->get();
@@ -65,7 +66,7 @@ new #[Layout('layouts::app', ['title' => '신청 승인'])] class extends Compon
             return collect();
         }
 
-        return EventAttendee::with('user')
+        return EventAttendee::with(['user', 'payment'])
             ->where('event_id', $this->selectedEventId)
             ->where('approval_status', 'approved')
             ->get();
@@ -78,7 +79,7 @@ new #[Layout('layouts::app', ['title' => '신청 승인'])] class extends Compon
             return collect();
         }
 
-        return EventAttendee::with('user')
+        return EventAttendee::with(['user', 'payment'])
             ->where('event_id', $this->selectedEventId)
             ->where('approval_status', 'rejected')
             ->get();
@@ -140,7 +141,15 @@ new #[Layout('layouts::app', ['title' => '신청 승인'])] class extends Compon
         $this->refreshLists();
     }
 }; ?>
-
+<style>
+    .review-detail{border-top:1px solid var(--line);margin-top:10px;padding-top:12px;}
+.review-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:12.5px;margin-bottom:14px;}
+.review-detail-grid div{color:var(--text-hi);}
+.review-detail-grid span{display:inline;font-size:10.5px;color:var(--spark-orange);font-weight:700;margin-right:6px;}
+.review-detail-grid span::after{content:":";}
+.review-detail-payment{background:rgba(255,138,61,.06);border:1px solid rgba(255,138,61,.2);border-radius:10px;padding:12px 14px;}
+.rdp-title{font-size:11px;font-weight:700;color:var(--spark-orange);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+</style>
 <div>
     <div class="mv-page-head">
         <h2>승인 대기 중인 신청자</h2>
@@ -246,7 +255,7 @@ new #[Layout('layouts::app', ['title' => '신청 승인'])] class extends Compon
 
                                 <div class="review-body">
                                     <div class="review-name-row">
-                                        <span class="review-name">{{ $attendee->user->name }}</span>
+                                        <span class="review-name">{{ $attendee->user->nickname ?: $attendee->user->name }}</span>
                                         <span class="pill pill-pending">승인 대기</span>
                                     </div>
                                     <div class="review-sub">
@@ -256,12 +265,47 @@ new #[Layout('layouts::app', ['title' => '신청 승인'])] class extends Compon
                                         @endif
                                         · {{ $attendee->user->gender === 'male' ? '남성' : ($attendee->user->gender === 'female' ? '여성' : '') }}
                                     </div>
-                                    <div class="review-tags">
-                                        @if ($attendee->user->job)<span class="review-tag">{{ $attendee->user->job }}</span>@endif
-                                        @if ($attendee->user->instagram_handle)<span class="review-tag">{{ $attendee->user->instagram_handle }}</span>@endif
-                                        @if ($attendee->user->hobbies_interests)<span class="review-tag">{{ $attendee->user->hobbies_interests }}</span>@endif
+
+                                    <div class="review-detail-grid" style="margin-top:12px;">
+                                        <div><span>실명</span>{{ $attendee->user->name }}</div>
+                                        <div><span>닉네임</span>{{ $attendee->user->nickname ?: '-' }}</div>
+                                        <div><span>직업</span>{{ $attendee->user->job ?: '-' }}</div>
+                                        <div><span>인스타그램</span>{{ $attendee->user->instagram_handle ?: '-' }}</div>
+                                        <div><span>취미·관심사</span>{{ $attendee->user->hobbies_interests ?: '-' }}</div>
+                                        <div><span>MBTI</span>{{ $attendee->user->mbti ?: '-' }}</div>
+                                        <div><span>키</span>{{ $attendee->user->height ? $attendee->user->height.'cm' : '-' }}</div>
+                                        <div><span>연애스타일</span>{{ $attendee->user->dating_style ?: '-' }}</div>
+                                        <div style="grid-column:span 2;"><span>이상형</span>{{ $attendee->user->ideal_type ?: '-' }}</div>
+                                        @if ($attendee->user->bio)
+                                            <div style="grid-column:span 2;"><span>한줄소개</span>{{ $attendee->user->bio }}</div>
+                                        @endif
                                     </div>
-                                    @if ($attendee->user->bio)<div class="review-bio">{{ $attendee->user->bio }}</div>@endif
+
+                                    <div class="review-detail-payment" style="margin-bottom:14px;">
+                                        <div class="rdp-title">결제 정보</div>
+                                        @if ($attendee->payment)
+                                            <div class="review-detail-grid" style="margin-bottom:0;">
+                                                <div><span>결제수단</span>{{ $attendee->payment->methodLabel() }}</div>
+                                                <div><span>금액</span>{{ number_format($attendee->payment->amount) }}원</div>
+                                                <div><span>상태</span>{{ $attendee->payment->status }}</div>
+                                                @if ($attendee->payment->method === 'bank_transfer')
+                                                    <div><span>입금자명</span>{{ $attendee->payment->depositor_name ?: '-' }}</div>
+                                                    <div style="grid-column:span 2;"><span>환불계좌</span>{{ $attendee->payment->refund_bank_name }} {{ $attendee->payment->refund_account_number }} ({{ $attendee->payment->refund_account_holder }})</div>
+                                                @endif
+                                                <div style="grid-column:span 2;">
+                                                    <span>현금영수증</span>
+                                                    @if ($attendee->payment->cash_receipt_requested)
+                                                        신청함 · {{ $attendee->payment->cash_receipt_type === 'business' ? '사업자' : '개인' }} · {{ $attendee->payment->cash_receipt_number }}
+                                                    @else
+                                                        신청 안 함
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div style="font-size:12.5px;color:var(--text-lo);">결제 정보 없음</div>
+                                        @endif
+                                    </div>
+
                                     <div class="review-actions">
                                         <button wire:click="approve({{ $attendee->id }})" wire:confirm="{{ $attendee->user->name }}님을 승인할까요?" class="btn btn-primary">승인</button>
                                         <button wire:click="reject({{ $attendee->id }})" wire:confirm="{{ $attendee->user->name }}님을 거절할까요?" class="btn btn-outline">거절</button>
@@ -289,7 +333,7 @@ new #[Layout('layouts::app', ['title' => '신청 승인'])] class extends Compon
 
                                 <div class="review-body">
                                     <div class="review-name-row">
-                                        <span class="review-name">{{ $attendee->user->name }}</span>
+                                        <span class="review-name">{{ $attendee->user->nickname ?: $attendee->user->name }}</span>
                                         <span class="pill pill-success">승인됨</span>
                                     </div>
                                     <div class="review-sub">
@@ -299,12 +343,47 @@ new #[Layout('layouts::app', ['title' => '신청 승인'])] class extends Compon
                                         @endif
                                         · {{ $attendee->user->gender === 'male' ? '남성' : ($attendee->user->gender === 'female' ? '여성' : '') }}
                                     </div>
-                                    <div class="review-tags">
-                                        @if ($attendee->user->job)<span class="review-tag">{{ $attendee->user->job }}</span>@endif
-                                        @if ($attendee->user->instagram_handle)<span class="review-tag">{{ $attendee->user->instagram_handle }}</span>@endif
-                                        @if ($attendee->user->hobbies_interests)<span class="review-tag">{{ $attendee->user->hobbies_interests }}</span>@endif
+
+                                    <div class="review-detail-grid" style="margin-top:12px;">
+                                        <div><span>실명</span>{{ $attendee->user->name }}</div>
+                                        <div><span>닉네임</span>{{ $attendee->user->nickname ?: '-' }}</div>
+                                        <div><span>직업</span>{{ $attendee->user->job ?: '-' }}</div>
+                                        <div><span>인스타그램</span>{{ $attendee->user->instagram_handle ?: '-' }}</div>
+                                        <div><span>취미·관심사</span>{{ $attendee->user->hobbies_interests ?: '-' }}</div>
+                                        <div><span>MBTI</span>{{ $attendee->user->mbti ?: '-' }}</div>
+                                        <div><span>키</span>{{ $attendee->user->height ? $attendee->user->height.'cm' : '-' }}</div>
+                                        <div><span>연애스타일</span>{{ $attendee->user->dating_style ?: '-' }}</div>
+                                        <div style="grid-column:span 2;"><span>이상형</span>{{ $attendee->user->ideal_type ?: '-' }}</div>
+                                        @if ($attendee->user->bio)
+                                            <div style="grid-column:span 2;"><span>한줄소개</span>{{ $attendee->user->bio }}</div>
+                                        @endif
                                     </div>
-                                    @if ($attendee->user->bio)<div class="review-bio">{{ $attendee->user->bio }}</div>@endif
+
+                                    <div class="review-detail-payment" style="margin-bottom:14px;">
+                                        <div class="rdp-title">결제 정보</div>
+                                        @if ($attendee->payment)
+                                            <div class="review-detail-grid" style="margin-bottom:0;">
+                                                <div><span>결제수단</span>{{ $attendee->payment->methodLabel() }}</div>
+                                                <div><span>금액</span>{{ number_format($attendee->payment->amount) }}원</div>
+                                                <div><span>상태</span>{{ $attendee->payment->status }}</div>
+                                                @if ($attendee->payment->method === 'bank_transfer')
+                                                    <div><span>입금자명</span>{{ $attendee->payment->depositor_name ?: '-' }}</div>
+                                                    <div style="grid-column:span 2;"><span>환불계좌</span>{{ $attendee->payment->refund_bank_name }} {{ $attendee->payment->refund_account_number }} ({{ $attendee->payment->refund_account_holder }})</div>
+                                                @endif
+                                                <div style="grid-column:span 2;">
+                                                    <span>현금영수증</span>
+                                                    @if ($attendee->payment->cash_receipt_requested)
+                                                        신청함 · {{ $attendee->payment->cash_receipt_type === 'business' ? '사업자' : '개인' }} · {{ $attendee->payment->cash_receipt_number }}
+                                                    @else
+                                                        신청 안 함
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div style="font-size:12.5px;color:var(--text-lo);">결제 정보 없음</div>
+                                        @endif
+                                    </div>
+
                                     <div class="review-actions">
                                         <button wire:click="reject({{ $attendee->id }})" wire:confirm="{{ $attendee->user->name }}님을 거절로 변경할까요?" class="btn btn-outline">거절로 변경</button>
                                     </div>
@@ -331,7 +410,7 @@ new #[Layout('layouts::app', ['title' => '신청 승인'])] class extends Compon
 
                                 <div class="review-body">
                                     <div class="review-name-row">
-                                        <span class="review-name">{{ $attendee->user->name }}</span>
+                                        <span class="review-name">{{ $attendee->user->nickname ?: $attendee->user->name }}</span>
                                         <span class="pill pill-muted">거절됨</span>
                                     </div>
                                     <div class="review-sub">
@@ -341,12 +420,47 @@ new #[Layout('layouts::app', ['title' => '신청 승인'])] class extends Compon
                                         @endif
                                         · {{ $attendee->user->gender === 'male' ? '남성' : ($attendee->user->gender === 'female' ? '여성' : '') }}
                                     </div>
-                                    <div class="review-tags">
-                                        @if ($attendee->user->job)<span class="review-tag">{{ $attendee->user->job }}</span>@endif
-                                        @if ($attendee->user->instagram_handle)<span class="review-tag">{{ $attendee->user->instagram_handle }}</span>@endif
-                                        @if ($attendee->user->hobbies_interests)<span class="review-tag">{{ $attendee->user->hobbies_interests }}</span>@endif
+
+                                    <div class="review-detail-grid" style="margin-top:12px;">
+                                        <div><span>실명</span>{{ $attendee->user->name }}</div>
+                                        <div><span>닉네임</span>{{ $attendee->user->nickname ?: '-' }}</div>
+                                        <div><span>직업</span>{{ $attendee->user->job ?: '-' }}</div>
+                                        <div><span>인스타그램</span>{{ $attendee->user->instagram_handle ?: '-' }}</div>
+                                        <div><span>취미·관심사</span>{{ $attendee->user->hobbies_interests ?: '-' }}</div>
+                                        <div><span>MBTI</span>{{ $attendee->user->mbti ?: '-' }}</div>
+                                        <div><span>키</span>{{ $attendee->user->height ? $attendee->user->height.'cm' : '-' }}</div>
+                                        <div><span>연애스타일</span>{{ $attendee->user->dating_style ?: '-' }}</div>
+                                        <div style="grid-column:span 2;"><span>이상형</span>{{ $attendee->user->ideal_type ?: '-' }}</div>
+                                        @if ($attendee->user->bio)
+                                            <div style="grid-column:span 2;"><span>한줄소개</span>{{ $attendee->user->bio }}</div>
+                                        @endif
                                     </div>
-                                    @if ($attendee->user->bio)<div class="review-bio">{{ $attendee->user->bio }}</div>@endif
+
+                                    <div class="review-detail-payment" style="margin-bottom:14px;">
+                                        <div class="rdp-title">결제 정보</div>
+                                        @if ($attendee->payment)
+                                            <div class="review-detail-grid" style="margin-bottom:0;">
+                                                <div><span>결제수단</span>{{ $attendee->payment->methodLabel() }}</div>
+                                                <div><span>금액</span>{{ number_format($attendee->payment->amount) }}원</div>
+                                                <div><span>상태</span>{{ $attendee->payment->status }}</div>
+                                                @if ($attendee->payment->method === 'bank_transfer')
+                                                    <div><span>입금자명</span>{{ $attendee->payment->depositor_name ?: '-' }}</div>
+                                                    <div style="grid-column:span 2;"><span>환불계좌</span>{{ $attendee->payment->refund_bank_name }} {{ $attendee->payment->refund_account_number }} ({{ $attendee->payment->refund_account_holder }})</div>
+                                                @endif
+                                                <div style="grid-column:span 2;">
+                                                    <span>현금영수증</span>
+                                                    @if ($attendee->payment->cash_receipt_requested)
+                                                        신청함 · {{ $attendee->payment->cash_receipt_type === 'business' ? '사업자' : '개인' }} · {{ $attendee->payment->cash_receipt_number }}
+                                                    @else
+                                                        신청 안 함
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div style="font-size:12.5px;color:var(--text-lo);">결제 정보 없음</div>
+                                        @endif
+                                    </div>
+
                                     <div class="review-actions">
                                         <button wire:click="approve({{ $attendee->id }})" wire:confirm="{{ $attendee->user->name }}님을 승인으로 변경할까요?" class="btn btn-primary">승인으로 변경</button>
                                     </div>

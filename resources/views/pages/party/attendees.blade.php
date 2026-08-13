@@ -68,7 +68,6 @@ new #[Layout('layouts::auth')] class extends Component
     <style>
         .att-card{border:1px solid var(--line);background:var(--card);border-radius:20px;padding:20px 22px;margin-bottom:14px;}
         .att-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
-        .att-avatar{width:46px;height:46px;border-radius:50%;object-fit:cover;border:1px solid var(--line);flex-shrink:0;}
         .att-avatar-fallback{width:46px;height:46px;border-radius:50%;flex-shrink:0;
             background:linear-gradient(135deg,var(--spark-orange),var(--spark-pink));
             display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px;}
@@ -77,6 +76,8 @@ new #[Layout('layouts::auth')] class extends Component
         .att-tag{font-size:11.5px;font-weight:700;padding:4px 12px;border-radius:999px;
             background:rgba(58,36,24,.05);color:var(--text-mid);border:1px solid var(--line);}
         .att-tag.badge{background:rgba(255,122,61,.14);color:var(--spark-orange);border-color:rgba(255,122,61,.3);}
+        .att-bio{font-size:13px;color:var(--text-hi);background:rgba(58,36,24,.02);border-radius:10px;
+            padding:12px 14px;margin-bottom:14px;line-height:1.6;}
         .att-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
         .att-tile{background:rgba(58,36,24,.02);border:1px solid var(--line);border-radius:14px;
             padding:10px 12px;overflow:hidden;min-width:0;}
@@ -99,19 +100,14 @@ new #[Layout('layouts::auth')] class extends Component
     @else
         @forelse ($this->attendees as $attendee)
             @php
-                $photos = $attendee->user->photos ?? [];
                 $age = $attendee->user->birth_date ? \Carbon\Carbon::parse($attendee->user->birth_date)->age : null;
                 $genderLabel = $attendee->user->gender === 'male' ? '남성' : ($attendee->user->gender === 'female' ? '여성' : '-');
+                $displayName = $attendee->user->nickname ?: $attendee->user->name;
             @endphp
             <div wire:key="attendee-{{ $attendee->id }}" class="att-card">
                 <div class="att-head">
-                    @if (count($photos))
-                        <img src="{{ asset('storage/' . $photos[0]) }}" class="att-avatar" alt="{{ $attendee->user->name }}">
-                    @else
-                        <div class="att-avatar-fallback">{{ mb_substr($attendee->user->name, 0, 1) }}</div>
-                    @endif
-
-                    <div class="att-name">{{ $attendee->user->name }}</div>
+                    <div class="att-avatar-fallback">{{ mb_substr($displayName, 0, 1) }}</div>
+                    <div class="att-name">{{ $displayName }}</div>
 
                     <div class="att-signal-btn">
                         @if ($this->sentSignalUserIds->contains($attendee->user_id))
@@ -132,33 +128,28 @@ new #[Layout('layouts::auth')] class extends Component
                     @if ($attendee->user->height)
                         <span class="att-tag">{{ $attendee->user->height }}cm</span>
                     @endif
+                    @if ($attendee->user->mbti)
+                        <span class="att-tag">{{ strtoupper($attendee->user->mbti) }}</span>
+                    @endif
                     <span class="att-tag badge">{{ $attendee->badge_no ?? '--' }}번</span>
                 </div>
 
+                @if ($attendee->user->bio)
+                    <div class="att-bio">{{ $attendee->user->bio }}</div>
+                @endif
+
                 <div class="att-grid">
                     <div class="att-tile">
-                        <div class="att-tile-top"><span>💼</span>직업</div>
-                        <div class="att-tile-value">{{ $attendee->user->job ?: '비공개' }}</div>
-                    </div>
-                    <div class="att-tile">
-                        <div class="att-tile-top"><span>🎯</span>관심사</div>
+                        <div class="att-tile-top"><span>🎯</span>취미 및 관심사</div>
                         <div class="att-tile-value">{{ $attendee->user->hobbies_interests ?: '비공개' }}</div>
                     </div>
                     <div class="att-tile">
                         <div class="att-tile-top"><span>💕</span>연애 스타일</div>
                         <div class="att-tile-value">{{ $attendee->user->dating_style ?: '비공개' }}</div>
                     </div>
-                    <div class="att-tile">
+                    <div class="att-tile" style="grid-column:span 2;">
                         <div class="att-tile-top"><span>✨</span>이상형</div>
                         <div class="att-tile-value">{{ $attendee->user->ideal_type ?: '비공개' }}</div>
-                    </div>
-                    <div class="att-tile">
-                        <div class="att-tile-top"><span>📸</span>인스타그램</div>
-                        <div class="att-tile-value">{{ $attendee->user->instagram_handle ?: '비공개' }}</div>
-                    </div>
-                    <div class="att-tile">
-                        <div class="att-tile-top"><span>💬</span>한줄소개</div>
-                        <div class="att-tile-value">{{ $attendee->user->bio ?: '비공개' }}</div>
                     </div>
                 </div>
             </div>

@@ -230,11 +230,13 @@ html{scrollbar-width:thin;scrollbar-color:rgba(58,36,24,.15) transparent;}
 
 <script>
     document.addEventListener("livewire:init", () => {
-        Livewire.onPageExpired(() => {
-            if (confirm("세션이 만료됐어요. 페이지를 새로고침할까요?")) {
-                window.location.reload();
-            }
-        });
+        if (typeof Livewire.onPageExpired === "function") {
+            Livewire.onPageExpired(() => {
+                if (confirm("세션이 만료됐어요. 페이지를 새로고침할까요?")) {
+                    window.location.reload();
+                }
+            });
+        }
     });
 </script>
 

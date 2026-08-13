@@ -51,4 +51,8 @@ return [
         'template_verification' => env('SOLAPI_TEMPLATE_VERIFICATION'),
     ],
 
+    'testing' => [
+        'bypass_code' => env('TESTING_BYPASS_CODE'),
+    ],
+
 ];

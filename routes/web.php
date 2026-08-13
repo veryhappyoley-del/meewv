@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CheckinScanController;
 
 Route::livewire('/', 'pages::home')->name('home');
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -12,8 +13,8 @@ Route::livewire('/crew', 'pages::crew')->name('crew');
 Route::livewire('/crew-apply', 'pages::crew-apply')->name('crew-apply');
 Route::livewire('/login', 'pages::auth.phone-login')->name('login');
 Route::livewire('/apply', 'pages::party.apply')->name('apply');
- 
 Route::livewire('/admin/login', 'pages::admin-auth.login')->name('admin.login');
+Route::get('/checkin/{token}', [CheckinScanController::class, 'show'])->name('checkin.scan');
 
 Route::middleware('auth')->group(function () {
     Route::livewire('/mypage', 'pages::mypage')->name('mypage');

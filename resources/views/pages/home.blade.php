@@ -1123,8 +1123,8 @@ new #[Layout('layouts::marketing')] class extends Component
                         </div>
                         <div class="phone-att-grid">
                             <div class="phone-tile">
-                                <div class="pt-top"><span>💼</span>직업</div>
-                                <div class="pt-val">마케터</div>
+                                <div class="pt-top"><span>🧠</span>MBTI</div>
+                                <div class="pt-val">ENFP</div>
                             </div>
                             <div class="phone-tile">
                                 <div class="pt-top"><span>🎯</span>관심사</div>
@@ -1155,8 +1155,8 @@ new #[Layout('layouts::marketing')] class extends Component
                         </div>
                         <div class="phone-att-grid">
                             <div class="phone-tile">
-                                <div class="pt-top"><span>💼</span>직업</div>
-                                <div class="pt-val">디자이너</div>
+                                <div class="pt-top"><span>🧠</span>MBTI</div>
+                                <div class="pt-val">INTJ</div>
                             </div>
                             <div class="phone-tile">
                                 <div class="pt-top"><span>🎯</span>관심사</div>

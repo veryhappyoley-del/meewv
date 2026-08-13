@@ -20,6 +20,7 @@ class User extends Authenticatable implements PasskeyUser
 
     protected $fillable = [
         'name',
+        'nickname',
         'email',
         'password',
         'phone',
@@ -37,6 +38,7 @@ class User extends Authenticatable implements PasskeyUser
         'height',
         'dating_style',
         'ideal_type',
+        'mbti',
     ];
 
     protected $hidden = [
@@ -63,6 +65,11 @@ class User extends Authenticatable implements PasskeyUser
         return Str::length($initials) > 1
             ? Str::substr($initials, 0, 1) . Str::substr($initials, -1)
             : $initials;
+    }
+
+    public function displayName(): string
+    {
+        return $this->nickname ?: $this->name;
     }
 
     public function eventAttendances(): HasMany

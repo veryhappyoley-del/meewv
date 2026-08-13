@@ -1,0 +1,24 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('payments', function (Blueprint $table) {
+            $table->string('refund_bank_name')->nullable()->after('cash_receipt_number');
+            $table->string('refund_account_number')->nullable()->after('refund_bank_name');
+            $table->string('refund_account_holder')->nullable()->after('refund_account_number');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('payments', function (Blueprint $table) {
+            $table->dropColumn(['refund_bank_name', 'refund_account_number', 'refund_account_holder']);
+        });
+    }
+};

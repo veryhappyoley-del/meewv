@@ -40,10 +40,11 @@ new #[Layout('layouts::auth')] class extends Component
     <div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--spark-pink);margin-bottom:14px;">보낸 시그널</div>
 
     @forelse ($this->sentSignals as $signal)
+        @php $recvName = $signal->receiver?->nickname ?: $signal->receiver?->name; @endphp
         <div wire:key="sent-{{ $signal->id }}" class="item-card">
             <div class="item-main">
                 <div class="item-name">
-                    {{ $signal->receiver?->name }}
+                    {{ $recvName }}
                     @if ($signal->status === 'pending')
                         <span class="pill pill-pending" style="margin-left:6px;">대기중</span>
                     @elseif ($signal->status === 'accepted')
@@ -66,10 +67,11 @@ new #[Layout('layouts::auth')] class extends Component
             $isSender = $signal->sender_id === auth()->id();
             $partner = $isSender ? $signal->receiver : $signal->sender;
             $disclosed = $isSender ? ($signal->receiver_disclosed_fields ?? []) : null;
+            $partnerDisplay = in_array('name', $disclosed ?? []) ? $partner->name : ($partner->nickname ?: $partner->name);
         @endphp
 
         <div wire:key="match-{{ $signal->id }}" class="mv-card-block">
-            <div class="head">{{ $partner->name }}</div>
+            <div class="head">{{ $partnerDisplay }}</div>
 
             @if ($isSender)
                 @if (in_array('phone', $disclosed ?? []))

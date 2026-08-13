@@ -84,6 +84,18 @@ new #[Layout('layouts::auth', ['title' => '마이페이지'])] class extends Com
                 <div class="code-label">내 회원코드</div>
                 <div class="code-value">{{ auth()->user()->member_code }}</div>
                 <div class="code-hint">다른 기기에서 로그인할 때, 전화번호와 이 코드로 바로 들어올 수 있어요.</div>
+                @php
+                    $latestAttendee = \App\Models\EventAttendee::where('user_id', auth()->id())
+                        ->whereHas('event', fn($q) => $q->where('event_date', '>=', now()->toDateString()))
+                        ->where('approval_status', 'approved')
+                        ->latest()
+                        ->first();
+                @endphp
+                @if ($latestAttendee)
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data={{ urlencode(url('/checkin/' . $latestAttendee->checkin_token)) }}"
+                        alt="입장 QR코드" style="width:150px;height:150px;margin:14px auto 0;display:block;border-radius:12px;">
+                    <p style="font-size:11px;color:var(--text-lo);margin-top:6px;">가장 최근 승인된 모임의 입장 QR이에요</p>
+                @endif
             </div>
         @endif
 

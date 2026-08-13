@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 
 class EventAttendee extends Model
 {
@@ -13,6 +15,15 @@ class EventAttendee extends Model
         'checked_in_at' => 'datetime',
     ];
 
+    protected static function booted(): void
+    {
+        static::creating(function (EventAttendee $attendee) {
+            if (! $attendee->checkin_token) {
+                $attendee->checkin_token = Str::random(24);
+            }
+        });
+    }
+
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
@@ -21,5 +32,10 @@ class EventAttendee extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function payment(): HasOne
+    {
+        return $this->hasOne(Payment::class)->latestOfMany();
     }
 }
