@@ -3,7 +3,12 @@
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-new #[Layout('layouts::marketing', ['title' => 'MEEWV YOGA · 요가 모임'])] class extends Component
+new #[Layout('layouts::marketing', [
+    'title' => 'MEEWV YOGA · 요가 모임',
+    'ogTitle' => 'MEEWV YOGA · 몸과 마음이 함께 쉬어가는 시간',
+    'ogDescription' => '낯선 이들과 함께하는 요가 모임. 움직임 끝에 남는 건 잔잔한 대화와 편안함이에요.',
+    'ogImage' => '/images/yoga/yoga-hero.jpg',
+])] class extends Component
 {
     //
 }; ?>

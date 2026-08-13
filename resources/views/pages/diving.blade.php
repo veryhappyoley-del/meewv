@@ -3,7 +3,12 @@
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-new #[Layout('layouts::marketing', ['title' => 'MEEWV DIVING · 프리다이빙 모임'])] class extends Component
+new #[Layout('layouts::marketing', [
+    'title' => 'MEEWV DIVING · 프리다이빙 모임',
+    'ogTitle' => 'MEEWV DIVING · 숨을 참는 순간, 비로소 고요해져요',
+    'ogDescription' => '장비 없이 몸 하나로 바다와 마주하는 시간. AIDA 공인 강사와 함께 안전하게 시작해보세요.',
+    'ogImage' => '/images/diving/diving-hero.webp',
+])] class extends Component
 {
     //
 }; ?>
