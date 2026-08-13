@@ -105,10 +105,10 @@ html{scrollbar-width:thin;scrollbar-color:rgba(58,36,24,.15) transparent;}
             </a>
             <nav class="nav-links">
                 <a href="#about">소개</a>
-                <a href="#how">이용방법</a>
                 <a href="#locations">지점</a>
+                <a href="/yoga">요가</a>
+                <a href="/diving">프리다이빙</a>
                 <a href="/crew">크루소개</a>
-                <a href="/crew-apply">크루제안</a>
             </nav>
             <div class="nav-cta-group">
                 @auth
@@ -133,10 +133,10 @@ html{scrollbar-width:thin;scrollbar-color:rgba(58,36,24,.15) transparent;}
         </div>
         <div class="nav-mobile-links">
             <a href="#about" @click="mobileOpen = false">소개</a>
-            <a href="#how" @click="mobileOpen = false">이용방법</a>
             <a href="#locations" @click="mobileOpen = false">지점</a>
+            <a href="/yoga" @click="mobileOpen = false">요가</a>
+            <a href="/diving" @click="mobileOpen = false">다이빙 모임</a>
             <a href="/crew" @click="mobileOpen = false">크루소개</a>
-            <a href="/crew-apply" @click="mobileOpen = false">크루제안</a>
             @auth
                 <a href="/mypage" @click="mobileOpen = false">마이페이지</a>
             @else

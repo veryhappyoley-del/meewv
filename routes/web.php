@@ -14,6 +14,10 @@ Route::livewire('/crew-apply', 'pages::crew-apply')->name('crew-apply');
 Route::livewire('/login', 'pages::auth.phone-login')->name('login');
 Route::livewire('/apply', 'pages::party.apply')->name('apply');
 Route::livewire('/admin/login', 'pages::admin-auth.login')->name('admin.login');
+Route::livewire('/yoga', 'pages::yoga')->name('yoga');
+Route::livewire('/diving', 'pages::diving')->name('diving');
+
+
 Route::get('/checkin/{token}', [CheckinScanController::class, 'show'])->name('checkin.scan');
 
 Route::middleware('auth')->group(function () {
