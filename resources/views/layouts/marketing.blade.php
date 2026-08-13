@@ -8,8 +8,8 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="MEEWV">
     <meta property="og:title" content="{{ $ogTitle ?? $title ?? 'MEEWV · 새로운 만남을 엮다' }}">
-    <meta property="og:description" content="{{ $ogDescription ?? '성비를 맞춘 테이블, 프로 MC가 이끄는 아이스브레이킹. 파티부터 러닝, 요가까지.' }}">
-    <meta property="og:image" content="{{ isset($ogImage) ? url($ogImage) : asset('images/og-default.jpg') }}">
+    <meta property="og:description" content="{{ $ogDescription ?? '성비를 맞춘 테이블, 노련한 MC가 이끄는 아이스브레이킹. 파티부터 러닝, 요가까지.' }}">
+    <meta property="og:image" content="{{ isset($ogImage) ? url($ogImage) : asset('/images/hero/3.png') }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
