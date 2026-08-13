@@ -968,23 +968,7 @@ new #[Layout('layouts::marketing')] class extends Component
             </div>
         </section>
 
-        {{-- 지점별 소개 --}}
-        <section class="peach-locations">
-            <div class="peach-kicker">Our Locations</div>
-            <h2 class="peach-h2">지점별 소개</h2>
-            <div class="peach-loc-grid">
-                @forelse ($this->locations as $loc)
-                <a href="/apply" class="peach-loc-card">
-                    <h3>{{ $loc->name }} 신청하기</h3>
-                    @if ($loc->description)
-                    <p style="margin-top:10px;line-height:1.7;">{{ $loc->description }}</p>
-                    @endif
-                </a>
-                @empty
-                <p style="color:var(--peach-text-mid);text-align:center;">등록된 지점이 아직 없어요.</p>
-                @endforelse
-            </div>
-        </section>
+
 
         {{-- 콘텐츠 3가지 스테이트먼트 --}}
         <div class="peach-statement">
